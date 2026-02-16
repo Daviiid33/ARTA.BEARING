@@ -1,0 +1,6480 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARTA BEARING - جستجوی هوشمند بلبرینگ</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Vazirmatn', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 50%);
+            animation: none; /* انیمیشن حذف شد */
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 32px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            padding: 32px;
+            position: relative;
+            z-index: 10;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: 700;
+            transform: rotate(10deg);
+            transition: transform 0.3s ease;
+        }
+        
+        .logo:hover .logo-icon {
+            transform: rotate(0deg) scale(1.1);
+        }
+        
+        .logo-text h1 {
+            font-size: 28px;
+            color: #1e293b;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        
+        .logo-text span {
+            font-size: 14px;
+            color: #667eea;
+            font-weight: 500;
+            background: #e0e7ff;
+            padding: 4px 12px;
+            border-radius: 100px;
+        }
+        
+        .badge {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 100px;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 10px 15px -3px rgba(245, 158, 11, 0.2);
+        }
+        
+        .mode-selector {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 30px;
+            background: rgba(241, 245, 249, 0.7);
+            padding: 8px;
+            border-radius: 100px;
+            backdrop-filter: blur(5px);
+        }
+        
+        .mode-btn {
+            flex: 1;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 100px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: transparent;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .mode-btn.inch-mode.active {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            box-shadow: 0 10px 15px -3px rgba(245, 158, 11, 0.3);
+            transform: scale(1.02);
+        }
+        
+        .mode-btn.metric-mode.active {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.3);
+            transform: scale(1.02);
+        }
+        
+        .info-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            padding: 20px 24px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: white;
+            box-shadow: 0 20px 25px -5px rgba(102, 126, 234, 0.3);
+            animation: slideIn 0.5s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .info-text {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .info-badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 6px 16px;
+            border-radius: 100px;
+            font-size: 14px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .search-section {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(203, 213, 225, 0.3);
+            border-radius: 24px;
+            padding: 28px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+        }
+        
+        .dimensions {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+        
+        .dimension-card {
+            background: white;
+            border-radius: 20px;
+            padding: 18px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+        
+        .dimension-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            border-color: #667eea;
+        }
+        
+        .dimension-title {
+            font-size: 14px;
+            color: #475569;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .dimension-title code {
+            background: #f1f5f9;
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-family: monospace;
+        }
+        
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid #f1f5f9;
+            border-radius: 14px;
+            font-size: 14px;
+            direction: ltr;
+            text-align: center;
+            transition: all 0.2s;
+            background: #f8fafc;
+            font-weight: 500;
+        }
+        
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+        
+        .input-group input::placeholder {
+            color: #94a3b8;
+            font-size: 12px;
+        }
+        
+        .input-group span {
+            color: #64748b;
+            font-size: 14px;
+            font-weight: 500;
+            min-width: 30px;
+            text-align: center;
+        }
+        
+        .mode-hint {
+            background: #f1f5f9;
+            padding: 12px 20px;
+            border-radius: 100px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #475569;
+        }
+        
+        .mode-hint i {
+            font-size: 18px;
+        }
+        
+        .search-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 16px;
+            border-radius: 100px;
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 20px 25px -5px rgba(102, 126, 234, 0.4);
+        }
+        
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 25px 30px -5px rgba(102, 126, 234, 0.5);
+        }
+        
+        .search-btn:active {
+            transform: translateY(0);
+        }
+        
+        .results-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            padding: 0 8px;
+        }
+        
+        .results-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .results-count {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 6px 16px;
+            border-radius: 100px;
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(102, 126, 234, 0.3);
+        }
+        
+        .results-container {
+            background: white;
+            border-radius: 24px;
+            border: 1px solid #f1f5f9;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .results-header-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            padding: 18px 20px;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            font-weight: 700;
+            color: #1e293b;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        
+        .results-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .result-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            padding: 16px 20px;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 14px;
+            transition: all 0.2s;
+            animation: fadeInRow 0.3s ease-out;
+            min-width: 0; /* اجازه می‌دهد ستون‌ها در صورت نیاز کوچک شوند */
+        }
+        
+        @keyframes fadeInRow {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .result-row:hover {
+            background: #f8fafc;
+            transform: translateX(5px);
+        }
+        
+        .result-row.matched {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-right: 4px solid #f59e0b;
+        }
+        
+        .result-number {
+            color: #2563eb;
+            font-weight: 600;
+            direction: ltr;
+            font-family: monospace;
+            font-size: 13px;
+            word-break: break-word; /* شکستن کلمات بلند */
+            white-space: normal; /* اجازه‌ی شکستن خط */
+            max-width: 100%; /* جلوگیری از سرریز */
+        }
+        
+        .dimension-value {
+            font-weight: 500;
+            color: #475569;
+        }
+        
+        .empty-state {
+            padding: 60px 20px;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 16px;
+        }
+        
+        .empty-state span {
+            font-size: 48px;
+            margin-bottom: 16px;
+            display: block;
+            color: #cbd5e1;
+        }
+        
+        .results-list::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .results-list::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        
+        .results-list::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+        }
+        
+        @media (max-width: 900px) {
+            .dimensions {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 640px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .dimensions {
+                grid-template-columns: 1fr;
+            }
+            
+            .results-header-row, .result-row {
+                grid-template-columns: 1fr;
+                gap: 8px;
+                text-align: center;
+            }
+            
+            .results-header-row {
+                display: none;
+            }
+            
+            .result-row {
+                padding: 20px;
+                border-bottom: 2px solid #e2e8f0;
+            }
+            
+            .result-row:hover {
+                transform: none;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .badge {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .mode-hint {
+                border-radius: 16px;
+            }
+            
+            .result-number {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- هدر با لوگو -->
+        <div class="header">
+            <div class="logo">
+                <div class="logo-icon">AB</div>
+                <div class="logo-text">
+                    <h1>ARTA BEARING</h1>
+                    <span>جستجوی هوشمند بلبرینگ</span>
+                </div>
+            </div>
+            <div class="badge">
+                <span>⚡</span>
+                <span>نسخه ۲.۰</span>
+            </div>
+        </div>
+        
+        <!-- انتخابگر حالت -->
+        <div class="mode-selector">
+            <button class="mode-btn inch-mode active" onclick="switchMode('inch')">
+                <span>📏</span>
+                <span>بلبرینگ‌های اینچی</span>
+            </button>
+            <button class="mode-btn metric-mode" onclick="switchMode('metric')">
+                <span>⚙️</span>
+                <span>بلبرینگ‌های شیار عمیق</span>
+            </button>
+        </div>
+
+        <!-- کارت اطلاعات -->
+        <div class="info-card">
+            <div class="info-text">
+                <span>📊</span>
+                <span id="modeInfo">حالت جاری: بلبرینگ‌های اینچی</span>
+            </div>
+            <div class="info-badge" id="dataCount">
+                ۰ بلبرینگ
+            </div>
+        </div>
+
+        <!-- راهنمای حالت -->
+        <div class="mode-hint" id="modeHint">
+            <span>📏</span>
+            <span>در حالت اینچی می‌توانید برای هر بعد محدوده (حداقل و حداکثر) وارد کنید</span>
+        </div>
+
+        <!-- بخش جستجو -->
+        <div class="search-section">
+            <div class="dimensions">
+                <!-- شماره بلبرینگ -->
+                <div class="dimension-card">
+                    <div class="dimension-title">
+                        <span>🔢</span>
+                        <span>شماره بلبرینگ</span>
+                    </div>
+                    <div class="input-group">
+                        <input type="text" id="bearingNumber" placeholder="مثال: 6205, K-67985..." dir="ltr">
+                    </div>
+                </div>
+
+                <!-- دهنه (d) -->
+                <div class="dimension-card">
+                    <div class="dimension-title">
+                        <span>🔧</span>
+                        <span>دهنه</span>
+                        <code>d</code>
+                    </div>
+                    <div class="input-group" id="dInputGroup">
+                        <input type="number" id="min_d" step="0.001" placeholder="حداقل">
+                        <span id="dSeparator">تا</span>
+                        <input type="number" id="max_d" step="0.001" placeholder="حداکثر">
+                    </div>
+                </div>
+
+                <!-- قطر خارجی (D) -->
+                <div class="dimension-card">
+                    <div class="dimension-title">
+                        <span>⚙️</span>
+                        <span>قطر خارجی</span>
+                        <code>D</code>
+                    </div>
+                    <div class="input-group" id="DInputGroup">
+                        <input type="number" id="min_D" step="0.001" placeholder="حداقل">
+                        <span id="DSeparator">تا</span>
+                        <input type="number" id="max_D" step="0.001" placeholder="حداکثر">
+                    </div>
+                </div>
+
+                <!-- ضخامت (B) -->
+                <div class="dimension-card">
+                    <div class="dimension-title">
+                        <span>📏</span>
+                        <span>ضخامت</span>
+                        <code>B</code>
+                    </div>
+                    <div class="input-group" id="BInputGroup">
+                        <input type="number" id="min_B" step="0.001" placeholder="حداقل">
+                        <span id="BSeparator">تا</span>
+                        <input type="number" id="max_B" step="0.001" placeholder="حداکثر">
+                    </div>
+                </div>
+            </div>
+
+            <button class="search-btn" id="searchBtn">
+                <span>🔍</span>
+                <span>جستجو در بلبرینگ‌ها</span>
+            </button>
+        </div>
+
+        <!-- نتایج -->
+        <div class="results-header">
+            <div class="results-title">
+                <span>📋</span>
+                <span>نتایج جستجو</span>
+            </div>
+            <div class="results-count" id="resultCount">0</div>
+        </div>
+        
+        <div class="results-container">
+            <div class="results-header-row">
+                <span>شماره بلبرینگ</span>
+                <span>d (mm)</span>
+                <span>D (mm)</span>
+                <span>B (mm)</span>
+            </div>
+            <div class="results-list" id="resultsList">
+                <div class="empty-state">
+                    <span>🔍</span>
+                    <div>برای شروع جستجو، مقادیر مورد نظر را وارد کنید</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        // ================ محل قرارگیری داده‌ها ======================
+        // ============================================================
+        
+        // داده‌های بلبرینگ‌های اینچی - اینجا جایگذاری کنید
+        let inchBearings =[
+  {
+    "number": "K-H 242649/K-H 242610",
+    "dimensions": {
+      "d": 206.375,
+      "D": 336.55,
+      "B": 98.425
+    }
+  },
+  {
+    "number": "K- 67985/ K- 67920",
+    "dimensions": {
+      "d": 206.375,
+      "D": 282.575,
+      "B": 46.038
+    }
+  },
+  {
+    "number": "K-LM 241148 / K-LM 241110",
+    "dimensions": {
+      "d": 203.987,
+      "D": 276.225,
+      "B": 42.662
+    }
+  },
+  {
+    "number": "K-67983 / K- 67920",
+    "dimensions": {
+      "d": 203.2,
+      "D": 282.575,
+      "B": 46.038
+    }
+  },
+  {
+    "number": "K-LM 241147 / K-LM 241110",
+    "dimensions": {
+      "d": 200.025,
+      "D": 276.225,
+      "B": 42.862
+    }
+  },
+  {
+    "number": "K- 87750 / K- 87111",
+    "dimensions": {
+      "d": 190.5,
+      "D": 282.575,
+      "B": 50.8
+    }
+  },
+  {
+    "number": "K- 67885 / K- 67820",
+    "dimensions": {
+      "d": 190.5,
+      "D": 266.7,
+      "B": 47.625
+    }
+  },
+  {
+    "number": "K-M 336949 / K-M 336912",
+    "dimensions": {
+      "d": 179.934,
+      "D": 265.112,
+      "B": 51.595
+    }
+  },
+  {
+    "number": "K-M 336948 / K-M 336912",
+    "dimensions": {
+      "d": 178.595,
+      "D": 265.112,
+      "B": 51.595
+    }
+  },
+  {
+    "number": "K-M 236849 / K-M 236810",
+    "dimensions": {
+      "d": 177.8,
+      "D": 260.35,
+      "B": 53.975
+    }
+  },
+  {
+    "number": "K-HH 437549 / K-HH 437510",
+    "dimensions": {
+      "d": 165.1,
+      "D": 336.5,
+      "B": 92.075
+    }
+  },
+  {
+    "number": "K-46790 / K- 46720",
+    "dimensions": {
+      "d": 165.1,
+      "D": 225.425,
+      "B": 41.275
+    }
+  },
+  {
+    "number": "K- 46780 / K-46720",
+    "dimensions": {
+      "d": 158.75,
+      "D": 225.425,
+      "B": 41.275
+    }
+  },
+  {
+    "number": "K-99600 / K-99100",
+    "dimensions": {
+      "d": 152.4,
+      "D": 254,
+      "B": 66.675
+    }
+  },
+  {
+    "number": "K-36691 / K- 36620",
+    "dimensions": {
+      "d": 146.05,
+      "D": 193.675,
+      "B": 28.575
+    }
+  },
+  {
+    "number": "K-36690 / K-36620",
+    "dimensions": {
+      "d": 146.05,
+      "D": 193.675,
+      "B": 28.575
+    }
+  },
+  {
+    "number": "K-48393 /K- 48320",
+    "dimensions": {
+      "d": 136.525,
+      "D": 190.5,
+      "B": 39.688
+    }
+  },
+  {
+    "number": "K- 95528 / K- 95925",
+    "dimensions": {
+      "d": 133.35,
+      "D": 234.95,
+      "B": 63.5
+    }
+  },
+  {
+    "number": "K- 95525 / K- 95925",
+    "dimensions": {
+      "d": 133.35,
+      "D": 234.95,
+      "B": 63.5
+    }
+  },
+  {
+    "number": "K- 67390 / K- 67322",
+    "dimensions": {
+      "d": 133.35,
+      "D": 196.85,
+      "B": 46.038
+    }
+  },
+  {
+    "number": "K-HM 926747 / K-HM 926710",
+    "dimensions": {
+      "d": 127,
+      "D": 228.6,
+      "B": 53.975
+    }
+  },
+  {
+    "number": "K- 67388 / K-67322",
+    "dimensions": {
+      "d": 127,
+      "D": 196.85,
+      "B": 46.038
+    }
+  },
+  {
+    "number": "K-48290 / K- 48220",
+    "dimensions": {
+      "d": 127,
+      "D": 182.562,
+      "B": 39.688
+    }
+  },
+  {
+    "number": "K-L 225849 / K-L 225810",
+    "dimensions": {
+      "d": 127,
+      "D": 169.862,
+      "B": 25.4
+    }
+  },
+  {
+    "number": "K-HM 624749 / K-HM 624710",
+    "dimensions": {
+      "d": 120.65,
+      "D": 190.5,
+      "B": 46.038
+    }
+  },
+  {
+    "number": "K- 68462 / K- 68712",
+    "dimensions": {
+      "d": 117.475,
+      "D": 180.975,
+      "B": 34.925
+    }
+  },
+  {
+    "number": "K- 64452 A / K-64700",
+    "dimensions": {
+      "d": 114.976,
+      "D": 177.8,
+      "B": 41.275
+    }
+  },
+  {
+    "number": "K- 938 / K- 932",
+    "dimensions": {
+      "d": 114.3,
+      "D": 212.725,
+      "B": 66.675
+    }
+  },
+  {
+    "number": "K-71450 / K- 71750",
+    "dimensions": {
+      "d": 114.3,
+      "D": 190.5,
+      "B": 47.625
+    }
+  },
+  {
+    "number": "K-68450 / K- 68712",
+    "dimensions": {
+      "d": 114.3,
+      "D": 180.975,
+      "B": 34.925
+    }
+  },
+  {
+    "number": "K-64450 / K-64700",
+    "dimensions": {
+      "d": 114.3,
+      "D": 177.8,
+      "B": 41.275
+    }
+  },
+  {
+    "number": "K-56425 / K- 56650",
+    "dimensions": {
+      "d": 107.95,
+      "D": 165.1,
+      "B": 36.512
+    }
+  },
+  {
+    "number": "K- 48190 / K- 48120",
+    "dimensions": {
+      "d": 107.95,
+      "D": 161.925,
+      "B": 34.925
+    }
+  },
+  {
+    "number": "K-37425 / K-37625",
+    "dimensions": {
+      "d": 107.95,
+      "D": 158.75,
+      "B": 23.02
+    }
+  },
+  {
+    "number": "K- 56418 / K- 56650",
+    "dimensions": {
+      "d": 106.362,
+      "D": 165.1,
+      "B": 36.512
+    }
+  },
+  {
+    "number": "K-782 / K- 772",
+    "dimensions": {
+      "d": 104.775,
+      "D": 180.975,
+      "B": 47.625
+    }
+  },
+  {
+    "number": "K-HH 221449 / K-HH 221410",
+    "dimensions": {
+      "d": 101.6,
+      "D": 190.5,
+      "B": 57.15
+    }
+  },
+  {
+    "number": "K- 861 / K- 854",
+    "dimensions": {
+      "d": 101.6,
+      "D": 190.5,
+      "B": 57.15
+    }
+  },
+  {
+    "number": "K- 687 / K- 672",
+    "dimensions": {
+      "d": 101.6,
+      "D": 168.275,
+      "B": 41.275
+    }
+  },
+  {
+    "number": "K-52401 / K- 52618",
+    "dimensions": {
+      "d": 101.6,
+      "D": 157.162,
+      "B": 36.512
+    }
+  },
+  {
+    "number": "K-52400 /K- 52618",
+    "dimensions": {
+      "d": 101.6,
+      "D": 157.162,
+      "B": 36.512
+    }
+  },
+  {
+    "number": "K-HM 220149 / K-HM 220110",
+    "dimensions": {
+      "d": 99.975,
+      "D": 156.975,
+      "B": 42
+    }
+  },
+  {
+    "number": "K- 42381 / K- 42584",
+    "dimensions": {
+      "d": 96.838,
+      "D": 148.43,
+      "B": 28.575
+    }
+  },
+  {
+    "number": "K-683 / K- 672",
+    "dimensions": {
+      "d": 95.25,
+      "D": 168.275,
+      "B": 41.275
+    }
+  },
+  {
+    "number": "K- 594 A / K- 592 A",
+    "dimensions": {
+      "d": 95.25,
+      "D": 152.4,
+      "B": 39.688
+    }
+  },
+  {
+    "number": "K-594 /K- 592 A",
+    "dimensions": {
+      "d": 95.25,
+      "D": 152.4,
+      "B": 39.688
+    }
+  },
+  {
+    "number": "K-47896 / K- 47820",
+    "dimensions": {
+      "d": 95.225,
+      "D": 146.05,
+      "B": 33.338
+    }
+  },
+  {
+    "number": "K-LL 319349 / K-LL 319310",
+    "dimensions": {
+      "d": 95.25,
+      "D": 128.588,
+      "B": 15.875
+    }
+  },
+  {
+    "number": "K- 42368 / K- 42584",
+    "dimensions": {
+      "d": 93.662,
+      "D": 148.43,
+      "B": 28.575
+    }
+  },
+  {
+    "number": "K-598 A / K- 592 A",
+    "dimensions": {
+      "d": 92.075,
+      "D": 152.4,
+      "B": 39.688
+    }
+  },
+  {
+    "number": "K- 598 / K- 592 A",
+    "dimensions": {
+      "d": 92.075,
+      "D": 152.4,
+      "B": 39.688
+    }
+  },
+  {
+    "number": "K- 598 A / K- 593 X",
+    "dimensions": {
+      "d": 92.075,
+      "D": 150,
+      "B": 35.992
+    }
+  },
+  {
+    "number": "K-47890 / K- 47820",
+    "dimensions": {
+      "d": 92.075,
+      "D": 146.05,
+      "B": 33.338
+    }
+  },
+  {
+    "number": "K- 6581 X / K - 6535",
+    "dimensions": {
+      "d": 89.974,
+      "D": 161.925,
+      "B": 53.975
+    }
+  },
+  {
+    "number": "K-HM 218248 / K-HM 218210",
+    "dimensions": {
+      "d": 89.974,
+      "D": 146.975,
+      "B": 40
+    }
+  },
+  {
+    "number": "K-6580 / K- 6535",
+    "dimensions": {
+      "d": 88.9,
+      "D": 161.925,
+      "B": 53.975
+    }
+  },
+  {
+    "number": "K-759 / K- 752",
+    "dimensions": {
+      "d": 88.9,
+      "D": 161.925,
+      "B": 47.625
+    }
+  },
+  {
+    "number": "K-HM 518445 / K-HM 518410",
+    "dimensions": {
+      "d": 88.9,
+      "D": 152.4,
+      "B": 39.688
+    }
+  },
+  {
+    "number": "K-593 /K-592 A",
+    "dimensions": {
+      "d": 88.9,
+      "D": 152.4,
+      "B": 39.688
+    }
+  },
+  {
+    "number": "K-665 / K- 652",
+    "dimensions": {
+      "d": 85.725,
+      "D": 152.4,
+      "B": 41.275
+    }
+  },
+  {
+    "number": "K-665 / K-653",
+    "dimensions": {
+      "d": 85.725,
+      "D": 146.05,
+      "B": 41.275
+    }
+  },
+  {
+    "number": "K-H 617049 / K-H 617010",
+    "dimensions": {
+      "d": 85.725,
+      "D": 142.138,
+      "B": 42.862
+    }
+  },
+  {
+    "number": "K- 497 / K- 493",
+    "dimensions": {
+      "d": 85.725,
+      "D": 136.525,
+      "B": 30.162
+    }
+  },
+  {
+    "number": "K-497 / K- 492 A",
+    "dimensions": {
+      "d": 85.725,
+      "D": 133.35,
+      "B": 30.162
+    }
+  },
+  {
+    "number": "K- 749 / K- 742",
+    "dimensions": {
+      "d": 85.026,
+      "D": 150.089,
+      "B": 44.45
+    }
+  },
+  {
+    "number": "K-498 / K- 493",
+    "dimensions": {
+      "d": 84.138,
+      "D": 136.525,
+      "B": 30.162
+    }
+  },
+  {
+    "number": "K- 498 / K- 492 A",
+    "dimensions": {
+      "d": 84.138,
+      "D": 133.35,
+      "B": 30.162
+    }
+  },
+  {
+    "number": "K-27690 /K- 27620",
+    "dimensions": {
+      "d": 83.345,
+      "D": 125.412,
+      "B": 25.4
+    }
+  },
+  {
+    "number": "K-663 / K- 652",
+    "dimensions": {
+      "d": 82.55,
+      "D": 152.4,
+      "B": 41.275
+    }
+  },
+  {
+    "number": "K- 749 A / K- 742",
+    "dimensions": {
+      "d": 82.55,
+      "D": 150.089,
+      "B": 44.45
+    }
+  },
+  {
+    "number": "K- 663 / K- 653",
+    "dimensions": {
+      "d": 82.55,
+      "D": 146.05,
+      "B": 41.275
+    }
+  },
+  {
+    "number": "K- 582 / K- 572",
+    "dimensions": {
+      "d": 82.55,
+      "D": 139.992,
+      "B": 36.512
+    }
+  },
+  {
+    "number": "K- 580 /K- 572",
+    "dimensions": {
+      "d": 82.55,
+      "D": 139.992,
+      "B": 36.512
+    }
+  },
+  {
+    "number": "K-580 /K- 572 X",
+    "dimensions": {
+      "d": 82.55,
+      "D": 139.7,
+      "B": 36.512
+    }
+  },
+  {
+    "number": "K- 495 / K- 493",
+    "dimensions": {
+      "d": 82.55,
+      "D": 136.525,
+      "B": 30.162
+    }
+  },
+  {
+    "number": "K- 47686 / K- 47620",
+    "dimensions": {
+      "d": 82.55,
+      "D": 133.35,
+      "B": 33.338
+    }
+  },
+  {
+    "number": "K-495 / K-492 A",
+    "dimensions": {
+      "d": 82.55,
+      "D": 133.35,
+      "B": 30.162
+    }
+  },
+  {
+    "number": "K-27687/K-27620",
+    "dimensions": {
+      "d": 82.55,
+      "D": 125.412,
+      "B": 25.4
+    }
+  },
+  {
+    "number": "K-496 / K-493",
+    "dimensions": {
+      "d": 80.962,
+      "D": 136.525,
+      "B": 30.162
+    }
+  },
+  {
+    "number": "K-496 / K- 492 A",
+    "dimensions": {
+      "d": 80.962,
+      "D": 133.35,
+      "B": 30.162
+    }
+  },
+  {
+    "number": "K-LM 814849 / K-LM 814810",
+    "dimensions": {
+      "d": 77.788,
+      "D": 117.475,
+      "B": 25.4
+    }
+  },
+  {
+    "number": "K- 9285 / K- 9220",
+    "dimensions": {
+      "d": 76.2,
+      "D": 161.925,
+      "B": 49.212
+    }
+  },
+  {
+    "number": "K-659 / K-652",
+    "dimensions": {
+      "d": 76.2,
+      "D": 152.4,
+      "B": 41.275
+    }
+  },
+  {
+    "number": "K-748 S / K- 742",
+    "dimensions": {
+      "d": 76.2,
+      "D": 150.089,
+      "B": 44.45
+    }
+  },
+  {
+    "number": "K-659 / K-653",
+    "dimensions": {
+      "d": 76.2,
+      "D": 146.05,
+      "B": 41.275
+    }
+  },
+  {
+    "number": "K-575 / K- 572",
+    "dimensions": {
+      "d": 76.2,
+      "D": 139.992,
+      "B": 36.512
+    }
+  },
+  {
+    "number": "K-575 / K-572 X",
+    "dimensions": {
+      "d": 76.2,
+      "D": 139.7,
+      "B": 36.512
+    }
+  },
+  {
+    "number": "K-495 AX / K-493",
+    "dimensions": {
+      "d": 76.2,
+      "D": 136.525,
+      "B": 30.162
+    }
+  },
+  {
+    "number": "K-495 A/ K- 493",
+    "dimensions": {
+      "d": 76.2,
+      "D": 136.525,
+      "B": 30.162
+    }
+  },
+  {
+    "number": "K-47678 / K-47620",
+    "dimensions": {
+      "d": 76.2,
+      "D": 133.35,
+      "B": 33.338
+    }
+  },
+  {
+    "number": "K-495 A / K- 492 A",
+    "dimensions": {
+      "d": 76.2,
+      "D": 133.35,
+      "B": 30.162
+    }
+  },
+  {
+    "number": "K-495 AX / K-492 A",
+    "dimensions": {
+      "d": 76.2,
+      "D": 133.35,
+      "B": 30.162
+    }
+  },
+  {
+    "number": "K-42688 / K- 42620",
+    "dimensions": {
+      "d": 76.2,
+      "D": 127,
+      "B": 30.162
+    }
+  },
+  {
+    "number": "K-42687 / K- 42620",
+    "dimensions": {
+      "d": 76.2,
+      "D": 127,
+      "B": 30.162
+    }
+  },
+  {
+    "number": "K-L 814749 / K-L 814710",
+    "dimensions": {
+      "d": 76.2,
+      "D": 109.538,
+      "B": 19.05
+    }
+  },
+  {
+    "number": "K-567 X / K-563",
+    "dimensions": {
+      "d": 73.025,
+      "D": 127,
+      "B": 36.512
+    }
+  },
+  {
+    "number": "K- 567 / K- 563",
+    "dimensions": {
+      "d": 73.025,
+      "D": 127,
+      "B": 36.512
+    }
+  },
+  {
+    "number": "K- 33287 / K- 33472",
+    "dimensions": {
+      "d": 73.025,
+      "D": 120,
+      "B": 29.794
+    }
+  },
+  {
+    "number": "K- 33287 / K- 33462",
+    "dimensions": {
+      "d": 73.025,
+      "D": 117.475,
+      "B": 30.162
+    }
+  },
+  {
+    "number": "K- 29685 /K- 29620",
+    "dimensions": {
+      "d": 73.025,
+      "D": 112.712,
+      "B": 25.4
+    }
+  },
+  {
+    "number": "K-H 715345 / K-H 715311",
+    "dimensions": {
+      "d": 71.438,
+      "D": 136.525,
+      "B": 46.038
+    }
+  },
+  {
+    "number": "K-H 414249 / K-H 414210",
+    "dimensions": {
+      "d": 71.438,
+      "D": 136.525,
+      "B": 41.275
+    }
+  },
+  {
+    "number": "K-645 /K- 632",
+    "dimensions": {
+      "d": 71.438,
+      "D": 136.525,
+      "B": 41.275
+    }
+  },
+  {
+    "number": "K-HM 813849 / K-HM 813811",
+    "dimensions": {
+      "d": 71.438,
+      "D": 127,
+      "B": 36.512
+    }
+  },
+  {
+    "number": "K-47490 / K- 47420",
+    "dimensions": {
+      "d": 71.438,
+      "D": 120,
+      "B": 32.545
+    }
+  },
+  {
+    "number": "K-33281 / K- 33472",
+    "dimensions": {
+      "d": 71.438,
+      "D": 120,
+      "B": 29.794
+    }
+  },
+  {
+    "number": "K- 33281 / K-33462",
+    "dimensions": {
+      "d": 71.438,
+      "D": 117.475,
+      "B": 30.162
+    }
+  },
+  {
+    "number": "K- 484 / K- 472",
+    "dimensions": {
+      "d": 70,
+      "D": 120,
+      "B": 29.794
+    }
+  },
+  {
+    "number": "K-566 / K- 563",
+    "dimensions": {
+      "d": 69.85,
+      "D": 127,
+      "B": 36.512
+    }
+  },
+  {
+    "number": "K- 482 / K- 472 X",
+    "dimensions": {
+      "d": 69.85,
+      "D": 123.825,
+      "B": 30.162
+    }
+  },
+  {
+    "number": "K-47487 / K-47420",
+    "dimensions": {
+      "d": 69.85,
+      "D": 120,
+      "B": 32.545
+    }
+  },
+  {
+    "number": "K-482 / K- 472",
+    "dimensions": {
+      "d": 69.85,
+      "D": 120,
+      "B": 29.794
+    }
+  },
+  {
+    "number": "K-33275 / K- 33472",
+    "dimensions": {
+      "d": 69.85,
+      "D": 120,
+      "B": 29.794
+    }
+  },
+  {
+    "number": "K-33275 / K-33462",
+    "dimensions": {
+      "d": 69.85,
+      "D": 117.475,
+      "B": 30.162
+    }
+  },
+  {
+    "number": "K-29675 / K- 29620",
+    "dimensions": {
+      "d": 69.85,
+      "D": 112.712,
+      "B": 25.4
+    }
+  },
+  {
+    "number": "K-LL 713149 / K-LL 713110",
+    "dimensions": {
+      "d": 69.85,
+      "D": 99.217,
+      "B": 17
+    }
+  },
+  {
+    "number": "K- 9278 / K-9220",
+    "dimensions": {
+      "d": 68.262,
+      "D": 161.925,
+      "B": 49.212
+    }
+  },
+  {
+    "number": "K-H 715343 / K-H 715311",
+    "dimensions": {
+      "d": 68.262,
+      "D": 136.525,
+      "B": 46.038
+    }
+  },
+  {
+    "number": "K-399 A /K- 394 A",
+    "dimensions": {
+      "d": 68.262,
+      "D": 110,
+      "B": 22
+    }
+  },
+  {
+    "number": "K- 641 / K- 632",
+    "dimensions": {
+      "d": 66.675,
+      "D": 136.525,
+      "B": 41.275
+    }
+  },
+  {
+    "number": "K-6386 / K- 6320",
+    "dimensions": {
+      "d": 66.675,
+      "D": 135.755,
+      "B": 53.975
+    }
+  },
+  {
+    "number": "K- 560 / K- 552 A",
+    "dimensions": {
+      "d": 66.675,
+      "D": 123.825,
+      "B": 38.1
+    }
+  },
+  {
+    "number": "K-33262 / K- 33472",
+    "dimensions": {
+      "d": 66.675,
+      "D": 120,
+      "B": 29.794
+    }
+  },
+  {
+    "number": "K-33262 / K-33462",
+    "dimensions": {
+      "d": 66.675,
+      "D": 117.475,
+      "B": 30.162
+    }
+  },
+  {
+    "number": "K-39590 / K- 39520",
+    "dimensions": {
+      "d": 66.675,
+      "D": 112.712,
+      "B": 30.162
+    }
+  },
+  {
+    "number": "K-3984 / K- 3925",
+    "dimensions": {
+      "d": 66.675,
+      "D": 112.712,
+      "B": 30.162
+    }
+  },
+  {
+    "number": "K-3984 / K- 3920",
+    "dimensions": {
+      "d": 66.675,
+      "D": 112.712,
+      "B": 30.162
+    }
+  },
+  {
+    "number": "K-29590 / K- 29521",
+    "dimensions": {
+      "d": 66.675,
+      "D": 110,
+      "B": 25.4
+    }
+  },
+  {
+    "number": "K-395 S / K- 394 A",
+    "dimensions": {
+      "d": 66.675,
+      "D": 110,
+      "B": 22
+    }
+  },
+  {
+    "number": "K-395 A / K- 394 A",
+    "dimensions": {
+      "d": 66.675,
+      "D": 110,
+      "B": 22
+    }
+  },
+  {
+    "number": "K-H 212749 / K-H 212710",
+    "dimensions": {
+      "d": 65.987,
+      "D": 123.975,
+      "B": 41.5
+    }
+  },
+  {
+    "number": "K-6379 / K- 6320",
+    "dimensions": {
+      "d": 65.088,
+      "D": 135.755,
+      "B": 53.975
+    }
+  },
+  {
+    "number": "K-559 / K-552 A",
+    "dimensions": {
+      "d": 63.5,
+      "D": 123.825,
+      "B": 38.1
+    }
+  },
+  {
+    "number": "K- 3982 /K- 3920",
+    "dimensions": {
+      "d": 63.5,
+      "D": 112.712,
+      "B": 30.162
+    }
+  },
+  {
+    "number": "K-39585 / K- 39520",
+    "dimensions": {
+      "d": 63.5,
+      "D": 112.712,
+      "B": 30.162
+    }
+  },
+  {
+    "number": "K-29585 / K-29520",
+    "dimensions": {
+      "d": 63.5,
+      "D": 107.95,
+      "B": 25.4
+    }
+  },
+  {
+    "number": "K-395 / K-394 A",
+    "dimensions": {
+      "d": 63.5,
+      "D": 110,
+      "B": 22
+    }
+  },
+  {
+    "number": "K-39250 / K-39412",
+    "dimensions": {
+      "d": 63.5,
+      "D": 104.775,
+      "B": 21.433
+    }
+  },
+  {
+    "number": "K-H 913842 / K-H 913810",
+    "dimensions": {
+      "d": 61.912,
+      "D": 146.05,
+      "B": 41.275
+    }
+  },
+  {
+    "number": "K-H 715334 /K-H 715311",
+    "dimensions": {
+      "d": 61.912,
+      "D": 136.525,
+      "B": 46.038
+    }
+  },
+  {
+    "number": "K-HM 911245 / K-HM 911210",
+    "dimensions": {
+      "d": 60.325,
+      "D": 130.175,
+      "B": 36.512
+    }
+  },
+  {
+    "number": "K-65237 / K-65500",
+    "dimensions": {
+      "d": 60.325,
+      "D": 127,
+      "B": 44.45
+    }
+  },
+  {
+    "number": "K-HM 813841 / K-HM 813811",
+    "dimensions": {
+      "d": 60.325,
+      "D": 127,
+      "B": 36.512
+    }
+  },
+  {
+    "number": "K-28985 / K-28920",
+    "dimensions": {
+      "d": 60.325,
+      "D": 101.6,
+      "B": 25.4
+    }
+  },
+  {
+    "number": "K-28985/K-28921",
+    "dimensions": {
+      "d": 60.325,
+      "D": 100,
+      "B": 25.4
+    }
+  },
+  {
+    "number": "K-388 A / K-383 A",
+    "dimensions": {
+      "d": 57.531,
+      "D": 100,
+      "B": 21
+    }
+  },
+  {
+    "number": "K-388 A / K-382",
+    "dimensions": {
+      "d": 57.531,
+      "D": 98.425,
+      "B": 21
+    }
+  },
+  {
+    "number": "K-388 A /K-382 S",
+    "dimensions": {
+      "d": 57.531,
+      "D": 96.838,
+      "B": 25.4
+    }
+  },
+  {
+    "number": "K-388 A/382 A",
+    "dimensions": {
+      "d": 57.531,
+      "D": 96.838,
+      "B": 21
+    }
+  },
+  {
+    "number": "K-65225/K-65500",
+    "dimensions": {
+      "d": 57.15,
+      "D": 127,
+      "B": 44.45
+    }
+  },
+  {
+    "number": "K-623/K-612",
+    "dimensions": {
+      "d": 57.15,
+      "D": 120.65,
+      "B": 41.275
+    }
+  },
+  {
+    "number": "K-39580/39528",
+    "dimensions": {
+      "d": 57.15,
+      "D": 119.985,
+      "B": 32.75
+    }
+  },
+  {
+    "number": "K-39580/K-39520",
+    "dimensions": {
+      "d": 57.15,
+      "D": 112.712,
+      "B": 30.162
+    }
+  },
+  {
+    "number": "K-39581/K-39520",
+    "dimensions": {
+      "d": 57.15,
+      "D": 112.712,
+      "B": 30.162
+    }
+  },
+  {
+    "number": "K-462/K-453 AS",
+    "dimensions": {
+      "d": 57.15,
+      "D": 107.95,
+      "B": 27.783
+    }
+  },
+  {
+    "number": "K-462/K-453 X",
+    "dimensions": {
+      "d": 57.15,
+      "D": 104.775,
+      "B": 30.162
+    }
+  },
+  {
+    "number": "K-387 AS /K-383 A",
+    "dimensions": {
+      "d": 57.15,
+      "D": 100,
+      "B": 21
+    }
+  },
+  {
+    "number": "K-387 A/ K-383 A",
+    "dimensions": {
+      "d": 57.15,
+      "D": 100,
+      "B": 21
+    }
+  },
+  {
+    "number": "K-387/K-383 A",
+    "dimensions": {
+      "d": 57.15,
+      "D": 100,
+      "B": 21
+    }
+  },
+  {
+    "number": "K-387 AS / K-382",
+    "dimensions": {
+      "d": 57.15,
+      "D": 98.425,
+      "B": 21
+    }
+  },
+  {
+    "number": "K-387 A/K-382",
+    "dimensions": {
+      "d": 57.15,
+      "D": 98.425,
+      "B": 21
+    }
+  },
+  {
+    "number": "K-387/K-382",
+    "dimensions": {
+      "d": 57.15,
+      "D": 98.425,
+      "B": 21
+    }
+  },
+  {
+    "number": "K-28682/K-28622",
+    "dimensions": {
+      "d": 57.15,
+      "D": 97.63,
+      "B": 24.608
+    }
+  },
+  {
+    "number": "K-387 AS /K-382 S",
+    "dimensions": {
+      "d": 57.15,
+      "D": 96.838,
+      "B": 25.4
+    }
+  },
+  {
+    "number": "K-387 A/ K-382 S",
+    "dimensions": {
+      "d": 57.15,
+      "D": 96.838,
+      "B": 25.4
+    }
+  },
+  {
+    "number": "K-387/K-382 S",
+    "dimensions": {
+      "d": 57.15,
+      "D": 96.838,
+      "B": 25.4
+    }
+  },
+  {
+    "number": "K-387 AS/K-382 A",
+    "dimensions": {
+      "d": 57.15,
+      "D": 96.838,
+      "B": 21
+    }
+  },
+  {
+    "number": "K-387 A/K-382 A",
+    "dimensions": {
+      "d": 57.15,
+      "D": 96.838,
+      "B": 21
+    }
+  },
+  {
+    "number": "K-387/K-382 A",
+    "dimensions": {
+      "d": 57.15,
+      "D": 96.838,
+      "B": 21
+    }
+  },
+  {
+    "number": "K-5566/K-5535",
+    "dimensions": {
+      "d": 55.562,
+      "D": 122.238,
+      "B": 43.658
+    }
+  },
+  {
+    "number": "K-28680/K-28622",
+    "dimensions": {
+      "d": 55.562,
+      "D": 97.63,
+      "B": 24.608
+    }
+  },
+  {
+    "number": "K-65212/K-65500",
+    "dimensions": {
+      "d": 53.975,
+      "D": 127,
+      "B": 44.45
+    }
+  },
+  {
+    "number": "K-621/K-612",
+    "dimensions": {
+      "d": 53.975,
+      "D": 120.65,
+      "B": 41.275
+    }
+  },
+  {
+    "number": "K-539/K-532 A",
+    "dimensions": {
+      "d": 53.975,
+      "D": 111.125,
+      "B": 38.1
+    }
+  },
+  {
+    "number": "K-539/K-532 X",
+    "dimensions": {
+      "d": 53.975,
+      "D": 107.95,
+      "B": 36.512
+    }
+  },
+  {
+    "number": "K-HM 807049/K-HM 807010",
+    "dimensions": {
+      "d": 53.975,
+      "D": 104.775,
+      "B": 36.512
+    }
+  },
+  {
+    "number": "K-33895/K-33822",
+    "dimensions": {
+      "d": 53.975,
+      "D": 95.25,
+      "B": 27.783
+    }
+  },
+  {
+    "number": "K-LM 806649/K-LM 806610",
+    "dimensions": {
+      "d": 53.975,
+      "D": 88.9,
+      "B": 19.05
+    }
+  },
+  {
+    "number": "K-66200/K-66462",
+    "dimensions": {
+      "d": 50.8,
+      "D": 117.475,
+      "B": 33.33
+    }
+  },
+  {
+    "number": "K-55200/K-55443",
+    "dimensions": {
+      "d": 50.8,
+      "D": 112.712,
+      "B": 30.162
+    }
+  },
+  {
+    "number": "K-537/K-532 A",
+    "dimensions": {
+      "d": 50.8,
+      "D": 111.125,
+      "B": 38.1
+    }
+  },
+  {
+    "number": "K-55200/K-55437",
+    "dimensions": {
+      "d": 50.8,
+      "D": 111.125,
+      "B": 30.162
+    }
+  },
+  {
+    "number": "K-HM 907643/K-HM 907614",
+    "dimensions": {
+      "d": 50.8,
+      "D": 111.125,
+      "B": 30.162
+    }
+  },
+  {
+    "number": "K-537/K-532 X",
+    "dimensions": {
+      "d": 50.8,
+      "D": 107.95,
+      "B": 36.512
+    }
+  },
+  {
+    "number": "K-4580/K-4535",
+    "dimensions": {
+      "d": 50.8,
+      "D": 104.775,
+      "B": 39.688
+    }
+  },
+  {
+    "number": "K-HM 807046 / K-HM 807010",
+    "dimensions": {
+      "d": 50.8,
+      "D": 104.775,
+      "B": 36.512
+    }
+  },
+  {
+    "number": "K-45284/K-45220",
+    "dimensions": {
+      "d": 50.8,
+      "D": 104.77,
+      "B": 30.162
+    }
+  },
+  {
+    "number": "K-529 X/ K-522",
+    "dimensions": {
+      "d": 50.8,
+      "D": 101.6,
+      "B": 34.925
+    }
+  },
+  {
+    "number": "K-28678/K-28622",
+    "dimensions": {
+      "d": 50.8,
+      "D": 97.63,
+      "B": 24.6
+    }
+  },
+  {
+    "number": "K-33889/K-33822",
+    "dimensions": {
+      "d": 50.8,
+      "D": 95.25,
+      "B": 27.783
+    }
+  },
+  {
+    "number": "K-3780/K-3720",
+    "dimensions": {
+      "d": 50.8,
+      "D": 93.264,
+      "B": 30.162
+    }
+  },
+  {
+    "number": "K-28580/K-28521",
+    "dimensions": {
+      "d": 50.8,
+      "D": 92.075,
+      "B": 24.608
+    }
+  },
+  {
+    "number": "K-368 A/ K-362 X",
+    "dimensions": {
+      "d": 50.8,
+      "D": 90,
+      "B": 25
+    }
+  },
+  {
+    "number": "K-368 A/ K-362 A",
+    "dimensions": {
+      "d": 50.8,
+      "D": 88.9,
+      "B": 20.63
+    }
+  },
+  {
+    "number": "K-18790/K-18720",
+    "dimensions": {
+      "d": 50.8,
+      "D": 85,
+      "B": 17.462
+    }
+  },
+  {
+    "number": "K-HM 807044/K-HM 807010",
+    "dimensions": {
+      "d": 49.212,
+      "D": 104.775,
+      "B": 36.512
+    }
+  },
+  {
+    "number": "K-5395/K-5335",
+    "dimensions": {
+      "d": 49.212,
+      "D": 103.188,
+      "B": 43.658
+    }
+  },
+  {
+    "number": "K-55187/K-55443",
+    "dimensions": {
+      "d": 47.625,
+      "D": 112.712,
+      "B": 30.162
+    }
+  },
+  {
+    "number": "K-55187/K-55437",
+    "dimensions": {
+      "d": 47.625,
+      "D": 111.125,
+      "B": 30.162
+    }
+  },
+  {
+    "number": "K-528 R/K-522",
+    "dimensions": {
+      "d": 47.625,
+      "D": 101.6,
+      "B": 34.925
+    }
+  },
+  {
+    "number": "K-528/K-522",
+    "dimensions": {
+      "d": 47.625,
+      "D": 101.6,
+      "B": 34.925
+    }
+  },
+  {
+    "number": "K-386 A /K- 382 A",
+    "dimensions": {
+      "d": 47.625,
+      "D": 96.838,
+      "B": 21
+    }
+  },
+  {
+    "number": "K-359 S/K-354 X",
+    "dimensions": {
+      "d": 46.038,
+      "D": 85,
+      "B": 20.638
+    }
+  },
+  {
+    "number": "K-18690/K-18620",
+    "dimensions": {
+      "d": 46.038,
+      "D": 79.375,
+      "B": 17.462
+    }
+  },
+  {
+    "number": "K-HM 204049/K-HM 204010",
+    "dimensions": {
+      "d": 45.987,
+      "D": 90.975,
+      "B": 32
+    }
+  },
+  {
+    "number": "K-LM 503349/K-LM 503310",
+    "dimensions": {
+      "d": 45.987,
+      "D": 74.976,
+      "B": 18
+    }
+  },
+  {
+    "number": "K-25590/K-25522",
+    "dimensions": {
+      "d": 45.618,
+      "D": 83.058,
+      "B": 23.876
+    }
+  },
+  {
+    "number": "K-25590/K-25523",
+    "dimensions": {
+      "d": 45.618,
+      "D": 82.931,
+      "B": 26.988
+    }
+  },
+  {
+    "number": "K-25590/K-25520",
+    "dimensions": {
+      "d": 45.618,
+      "D": 82.931,
+      "B": 23.812
+    }
+  },
+  {
+    "number": "K-LM 603049/K-LM 603011",
+    "dimensions": {
+      "d": 45.242,
+      "D": 77.788,
+      "B": 19.842
+    }
+  },
+  {
+    "number": "K-HM 905843/K-HM 905810",
+    "dimensions": {
+      "d": 44.988,
+      "D": 104.986,
+      "B": 32.512
+    }
+  },
+  {
+    "number": "K-358 X/K-354 X",
+    "dimensions": {
+      "d": 44.988,
+      "D": 85,
+      "B": 20.638
+    }
+  },
+  {
+    "number": "K-3776/K-3720",
+    "dimensions": {
+      "d": 44.983,
+      "D": 93.264,
+      "B": 30.162
+    }
+  },
+  {
+    "number": "K-615/K-612",
+    "dimensions": {
+      "d": 44.45,
+      "D": 120.65,
+      "B": 41.275
+    }
+  },
+  {
+    "number": "K-535/K-532 A",
+    "dimensions": {
+      "d": 44.45,
+      "D": 111.125,
+      "B": 38.1
+    }
+  },
+  {
+    "number": "K-535/K-532 X",
+    "dimensions": {
+      "d": 44.45,
+      "D": 107.95,
+      "B": 36.512
+    }
+  },
+  {
+    "number": "K-527/K-522",
+    "dimensions": {
+      "d": 44.45,
+      "D": 101.6,
+      "B": 34.925
+    }
+  },
+  {
+    "number": "K-53176/K-53387 X",
+    "dimensions": {
+      "d": 44.45,
+      "D": 98.425,
+      "B": 30.958
+    }
+  },
+  {
+    "number": "K-HM 903249/K-HM 903210",
+    "dimensions": {
+      "d": 44.45,
+      "D": 95.25,
+      "B": 30.958
+    }
+  },
+  {
+    "number": "K-53177/K-53375",
+    "dimensions": {
+      "d": 44.45,
+      "D": 95.25,
+      "B": 30.958
+    }
+  },
+  {
+    "number": "K-53178/K-53377",
+    "dimensions": {
+      "d": 44.45,
+      "D": 95.25,
+      "B": 30.958
+    }
+  },
+  {
+    "number": "K-53178/K-53375",
+    "dimensions": {
+      "d": 44.45,
+      "D": 95.25,
+      "B": 30.958
+    }
+  },
+  {
+    "number": "K-53176/K-53377",
+    "dimensions": {
+      "d": 44.45,
+      "D": 95.25,
+      "B": 30.958
+    }
+  },
+  {
+    "number": "K-53176/K-53375",
+    "dimensions": {
+      "d": 44.45,
+      "D": 95.25,
+      "B": 30.958
+    }
+  },
+  {
+    "number": "K-33885/K-33822",
+    "dimensions": {
+      "d": 44.45,
+      "D": 95.25,
+      "B": 27.783
+    }
+  },
+  {
+    "number": "K-438/K-432",
+    "dimensions": {
+      "d": 44.45,
+      "D": 95.25,
+      "B": 27.783
+    }
+  },
+  {
+    "number": "K-3782/K-3720",
+    "dimensions": {
+      "d": 44.45,
+      "D": 93.264,
+      "B": 30.162
+    }
+  },
+  {
+    "number": "K-355 X / K- 352",
+    "dimensions": {
+      "d": 44.45,
+      "D": 90.119,
+      "B": 23
+    }
+  },
+  {
+    "number": "K-HM 803149/K-HM 803110",
+    "dimensions": {
+      "d": 44.45,
+      "D": 88.9,
+      "B": 30.162
+    }
+  },
+  {
+    "number": "K-3578/K-3525",
+    "dimensions": {
+      "d": 44.45,
+      "D": 87.312,
+      "B": 30.162
+    }
+  },
+  {
+    "number": "K-25580/K-25522",
+    "dimensions": {
+      "d": 44.45,
+      "D": 83.058,
+      "B": 23.876
+    }
+  },
+  {
+    "number": "K-25580/K-25523",
+    "dimensions": {
+      "d": 44.45,
+      "D": 82.931,
+      "B": 26.988
+    }
+  },
+  {
+    "number": "K-25580/K-25520",
+    "dimensions": {
+      "d": 44.45,
+      "D": 82.931,
+      "B": 23.812
+    }
+  },
+  {
+    "number": "K-L 102849/K-L 102810",
+    "dimensions": {
+      "d": 44.45,
+      "D": 73.025,
+      "B": 18.258
+    }
+  },
+  {
+    "number": "K-25577/K-25522",
+    "dimensions": {
+      "d": 42.875,
+      "D": 83.058,
+      "B": 23.876
+    }
+  },
+  {
+    "number": "K-25577/K-25523",
+    "dimensions": {
+      "d": 42.875,
+      "D": 82.931,
+      "B": 26.988
+    }
+  },
+  {
+    "number": "K-25577/K-25520",
+    "dimensions": {
+      "d": 42.875,
+      "D": 82.931,
+      "B": 23.812
+    }
+  },
+  {
+    "number": "K-3579/K-3525",
+    "dimensions": {
+      "d": 42.862,
+      "D": 87.312,
+      "B": 30.162
+    }
+  },
+  {
+    "number": "K-526/K-522",
+    "dimensions": {
+      "d": 41.275,
+      "D": 101.6,
+      "B": 34.925
+    }
+  },
+  {
+    "number": "K-53162/K-53387 X",
+    "dimensions": {
+      "d": 41.275,
+      "D": 98.425,
+      "B": 30.958
+    }
+  },
+  {
+    "number": "K-53162/K-53370",
+    "dimensions": {
+      "d": 41.275,
+      "D": 95.25,
+      "B": 30.958
+    }
+  },
+  {
+    "number": "K-53162/K-53375",
+    "dimensions": {
+      "d": 41.275,
+      "D": 95.25,
+      "B": 30.958
+    }
+  },
+  {
+    "number": "K-HM 803146/K-HM 803110",
+    "dimensions": {
+      "d": 41.275,
+      "D": 88.9,
+      "B": 30.162
+    }
+  },
+  {
+    "number": "K-419/K-414",
+    "dimensions": {
+      "d": 41.275,
+      "D": 88.55,
+      "B": 26.988
+    }
+  },
+  {
+    "number": "K-3577/K-3525",
+    "dimensions": {
+      "d": 41.275,
+      "D": 87.312,
+      "B": 30.162
+    }
+  },
+  {
+    "number": "K-3585/K-3525",
+    "dimensions": {
+      "d": 41.275,
+      "D": 87.312,
+      "B": 30.162
+    }
+  },
+  {
+    "number": "K-M 802048/K-M 802011",
+    "dimensions": {
+      "d": 41.275,
+      "D": 82.55,
+      "B": 26.543
+    }
+  },
+  {
+    "number": "K-24780/K-24720",
+    "dimensions": {
+      "d": 41.275,
+      "D": 76.2,
+      "B": 22.225
+    }
+  },
+  {
+    "number": "K-11162/K-11300",
+    "dimensions": {
+      "d": 41.275,
+      "D": 76.2,
+      "B": 18.009
+    }
+  },
+  {
+    "number": "K-LM 501349/K-LM 501311",
+    "dimensions": {
+      "d": 41.275,
+      "D": 73.431,
+      "B": 23.012
+    }
+  },
+  {
+    "number": "K-LM 501349/K-LM 501314",
+    "dimensions": {
+      "d": 41.275,
+      "D": 73.431,
+      "B": 21.43
+    }
+  },
+  {
+    "number": "K-LM 501349/K-LM 501310",
+    "dimensions": {
+      "d": 41.275,
+      "D": 73.431,
+      "B": 19.558
+    }
+  },
+  {
+    "number": "K-18590/K-18520",
+    "dimensions": {
+      "d": 41.275,
+      "D": 73.025,
+      "B": 16.66
+    }
+  },
+  {
+    "number": "K-LM 300849/K-LM 300811",
+    "dimensions": {
+      "d": 40.98,
+      "D": 67.975,
+      "B": 17.5
+    }
+  },
+  {
+    "number": "K-2789/K-2720",
+    "dimensions": {
+      "d": 39.688,
+      "D": 76.2,
+      "B": 23.812
+    }
+  },
+  {
+    "number": "K-2789/K-2729",
+    "dimensions": {
+      "d": 39.688,
+      "D": 76.2,
+      "B": 23.812
+    }
+  },
+  {
+    "number": "K-M 201047/K-M 201011",
+    "dimensions": {
+      "d": 39.688,
+      "D": 73.025,
+      "B": 25.65
+    }
+  },
+  {
+    "number": "K-2789/K-2735 X",
+    "dimensions": {
+      "d": 39.688,
+      "D": 73.025,
+      "B": 23.812
+    }
+  },
+  {
+    "number": "K-418/K-414",
+    "dimensions": {
+      "d": 38.1,
+      "D": 88.5,
+      "B": 26.988
+    }
+  },
+  {
+    "number": "K-HM 801346 X/K-HM 801310",
+    "dimensions": {
+      "d": 38.1,
+      "D": 82.55,
+      "B": 29.37
+    }
+  },
+  {
+    "number": "K-HM 801346/K-HM 801310",
+    "dimensions": {
+      "d": 38.1,
+      "D": 82.55,
+      "B": 29.37
+    }
+  },
+  {
+    "number": "K-28150/K-28317",
+    "dimensions": {
+      "d": 38.1,
+      "D": 80.035,
+      "B": 21.433
+    }
+  },
+  {
+    "number": "K-3490/K-3420",
+    "dimensions": {
+      "d": 38.1,
+      "D": 79.375,
+      "B": 29.37
+    }
+  },
+  {
+    "number": "K-2788/K-2720",
+    "dimensions": {
+      "d": 38.1,
+      "D": 76.2,
+      "B": 23.812
+    }
+  },
+  {
+    "number": "K-2788/K-2729",
+    "dimensions": {
+      "d": 38.1,
+      "D": 76.2,
+      "B": 23.812
+    }
+  },
+  {
+    "number": "K-28150/K-28300",
+    "dimensions": {
+      "d": 38.1,
+      "D": 76.2,
+      "B": 20.638
+    }
+  },
+  {
+    "number": "K-2788/K-2735 X",
+    "dimensions": {
+      "d": 38.1,
+      "D": 73.025,
+      "B": 23.812
+    }
+  },
+  {
+    "number": "K-16150/K-16283",
+    "dimensions": {
+      "d": 38.1,
+      "D": 72.238,
+      "B": 23.812
+    }
+  },
+  {
+    "number": "K-16150/K-16284",
+    "dimensions": {
+      "d": 38.1,
+      "D": 72.238,
+      "B": 20.638
+    }
+  },
+  {
+    "number": "K-16150/K-16282",
+    "dimensions": {
+      "d": 38.1,
+      "D": 72,
+      "B": 19
+    }
+  },
+  {
+    "number": "K-19150/K-19283",
+    "dimensions": {
+      "d": 38.1,
+      "D": 72,
+      "B": 17.018
+    }
+  },
+  {
+    "number": "K-LM 29749/K-LM 29711",
+    "dimensions": {
+      "d": 38.1,
+      "D": 65.088,
+      "B": 19.812
+    }
+  },
+  {
+    "number": "K-LM 29749/K-LM 29710",
+    "dimensions": {
+      "d": 38.1,
+      "D": 65.088,
+      "B": 18.034
+    }
+  },
+  {
+    "number": "K-31597/K-31520",
+    "dimensions": {
+      "d": 36.512,
+      "D": 76.2,
+      "B": 29.37
+    }
+  },
+  {
+    "number": "K-HM 89449/K-HM 89410",
+    "dimensions": {
+      "d": 36.512,
+      "D": 76.2,
+      "B": 29.37
+    }
+  },
+  {
+    "number": "K-HM 89448/K-HM 89410",
+    "dimensions": {
+      "d": 36.512,
+      "D": 76.2,
+      "B": 29.37
+    }
+  },
+  {
+    "number": "K-2794/K-2720",
+    "dimensions": {
+      "d": 36.487,
+      "D": 76.2,
+      "B": 23.812
+    }
+  },
+  {
+    "number": "K-2794/K-2735 X",
+    "dimensions": {
+      "d": 36.487,
+      "D": 73.025,
+      "B": 23.812
+    }
+  },
+  {
+    "number": "K-25880/K-25820",
+    "dimensions": {
+      "d": 36.487,
+      "D": 73.025,
+      "B": 23.812
+    }
+  },
+  {
+    "number": "K-25880/K-25821",
+    "dimensions": {
+      "d": 36.487,
+      "D": 73.025,
+      "B": 23.812
+    }
+  },
+  {
+    "number": "K-L 68149/K-L 68111",
+    "dimensions": {
+      "d": 34.988,
+      "D": 59.974,
+      "B": 15.875
+    }
+  },
+  {
+    "number": "K-L 68149/K-L 68110",
+    "dimensions": {
+      "d": 34.988,
+      "D": 59.131,
+      "B": 15.875
+    }
+  },
+  {
+    "number": "K-3581/K-3525",
+    "dimensions": {
+      "d": 34.925,
+      "D": 87.312,
+      "B": 30.162
+    }
+  },
+  {
+    "number": "K-28137/K28317",
+    "dimensions": {
+      "d": 34.925,
+      "D": 80.03,
+      "B": 21.433
+    }
+  },
+  {
+    "number": "K-3478/K-3420",
+    "dimensions": {
+      "d": 34.925,
+      "D": 79.375,
+      "B": 29.37
+    }
+  },
+  {
+    "number": "K-31594/K-31520",
+    "dimensions": {
+      "d": 34.925,
+      "D": 76.2,
+      "B": 29.37
+    }
+  },
+  {
+    "number": "K-31593/K-31520",
+    "dimensions": {
+      "d": 34.925,
+      "D": 76.2,
+      "B": 29.37
+    }
+  },
+  {
+    "number": "K-HM 89446/K-HM89410",
+    "dimensions": {
+      "d": 34.925,
+      "D": 76.2,
+      "B": 29.37
+    }
+  },
+  {
+    "number": "K-28137/K-28300",
+    "dimensions": {
+      "d": 34.925,
+      "D": 76.2,
+      "B": 20.638
+    }
+  },
+  {
+    "number": "K-23690/K-23620",
+    "dimensions": {
+      "d": 34.925,
+      "D": 73.025,
+      "B": 26.988
+    }
+  },
+  {
+    "number": "K-25877/K-25820",
+    "dimensions": {
+      "d": 34.925,
+      "D": 73.025,
+      "B": 23.812
+    }
+  },
+  {
+    "number": "K-25877/K-25821",
+    "dimensions": {
+      "d": 34.925,
+      "D": 73.025,
+      "B": 23.812
+    }
+  },
+  {
+    "number": "K-HM88649/K-HM88610",
+    "dimensions": {
+      "d": 34.925,
+      "D": 72.233,
+      "B": 25.4
+    }
+  },
+  {
+    "number": "K-14136 A/K-14283",
+    "dimensions": {
+      "d": 34.925,
+      "D": 72.085,
+      "B": 29.522
+    }
+  },
+  {
+    "number": "K-14138 A/K-14283",
+    "dimensions": {
+      "d": 34.925,
+      "D": 72.085,
+      "B": 22.385
+    }
+  },
+  {
+    "number": "K-14137 A/ K-14283",
+    "dimensions": {
+      "d": 34.925,
+      "D": 72.085,
+      "B": 22.385
+    }
+  },
+  {
+    "number": "K-14136 A/K-14274",
+    "dimensions": {
+      "d": 34.925,
+      "D": 69.012,
+      "B": 26.982
+    }
+  },
+  {
+    "number": "K-14138 A/K-14274",
+    "dimensions": {
+      "d": 34.925,
+      "D": 69.012,
+      "B": 19.845
+    }
+  },
+  {
+    "number": "K-14137 A /K-14274",
+    "dimensions": {
+      "d": 34.925,
+      "D": 69.012,
+      "B": 19.845
+    }
+  },
+  {
+    "number": "K-14136 A /K-14276",
+    "dimensions": {
+      "d": 34.925,
+      "D": 69.012,
+      "B": 26.98
+    }
+  },
+  {
+    "number": "K-14138 A/K-14276",
+    "dimensions": {
+      "d": 34.925,
+      "D": 69.012,
+      "B": 19.845
+    }
+  },
+  {
+    "number": "K-14137 A /K-14276",
+    "dimensions": {
+      "d": 34.925,
+      "D": 69.012,
+      "B": 19.845
+    }
+  },
+  {
+    "number": "K-LM 48548/K-LM 48510",
+    "dimensions": {
+      "d": 34.925,
+      "D": 65.08,
+      "B": 18.034
+    }
+  },
+  {
+    "number": "K-43131/K-43312",
+    "dimensions": {
+      "d": 33.33,
+      "D": 79.375,
+      "B": 25.4
+    }
+  },
+  {
+    "number": "K-HM 89443/K-HM 89410",
+    "dimensions": {
+      "d": 33.33,
+      "D": 76.2,
+      "B": 29.37
+    }
+  },
+  {
+    "number": "K-14130/K-14283",
+    "dimensions": {
+      "d": 33.33,
+      "D": 72.08,
+      "B": 22.385
+    }
+  },
+  {
+    "number": "K-14130/K-14276",
+    "dimensions": {
+      "d": 33.33,
+      "D": 69.012,
+      "B": 19.84
+    }
+  },
+  {
+    "number": "K-14130/K-14274",
+    "dimensions": {
+      "d": 33.33,
+      "D": 69.012,
+      "B": 19.84
+    }
+  },
+  {
+    "number": "K-M 88048/K-M 88011",
+    "dimensions": {
+      "d": 33.33,
+      "D": 68.26,
+      "B": 22.22
+    }
+  },
+  {
+    "number": "K-M 88048/ KM 88010",
+    "dimensions": {
+      "d": 33.33,
+      "D": 68.262,
+      "B": 22.22
+    }
+  },
+  {
+    "number": "K-43125/K-43312",
+    "dimensions": {
+      "d": 31.75,
+      "D": 79.37,
+      "B": 25.4
+    }
+  },
+  {
+    "number": "K-HM 88542 /K-HM 88510",
+    "dimensions": {
+      "d": 31.75,
+      "D": 73.025,
+      "B": 29.37
+    }
+  },
+  {
+    "number": "K-M 88046 /K-M 88011",
+    "dimensions": {
+      "d": 31.75,
+      "D": 68.262,
+      "B": 22.22
+    }
+  },
+  {
+    "number": "K-M88046/K-M 88010",
+    "dimensions": {
+      "d": 31.75,
+      "D": 68.262,
+      "B": 22.22
+    }
+  },
+  {
+    "number": "K-2580/K-2520",
+    "dimensions": {
+      "d": 31.75,
+      "D": 66.421,
+      "B": 25.4
+    }
+  },
+  {
+    "number": "K-15123/K15250 X",
+    "dimensions": {
+      "d": 31.75,
+      "D": 63.5,
+      "B": 19.749
+    }
+  },
+  {
+    "number": "K-15123/K-15245",
+    "dimensions": {
+      "d": 31.75,
+      "D": 62,
+      "B": 18.161
+    }
+  },
+  {
+    "number": "K-LM 67048 / K-LM 67010",
+    "dimensions": {
+      "d": 31.75,
+      "D": 59.131,
+      "B": 15.875
+    }
+  },
+  {
+    "number": "K-15118 / K-15250",
+    "dimensions": {
+      "d": 30.213,
+      "D": 63.5,
+      "B": 20.638
+    }
+  },
+  {
+    "number": "K- 15118/K-15245",
+    "dimensions": {
+      "d": 30.213,
+      "D": 62,
+      "B": 19.05
+    }
+  },
+  {
+    "number": "K-M 88043/KM 88011",
+    "dimensions": {
+      "d": 30.162,
+      "D": 68.262,
+      "B": 22.225
+    }
+  },
+  {
+    "number": "K-M 88043/ K-M 88010",
+    "dimensions": {
+      "d": 30.162,
+      "D": 68.262,
+      "B": 22.225
+    }
+  },
+  {
+    "number": "K-M 86649/ K-M 86610",
+    "dimensions": {
+      "d": 30.162,
+      "D": 64.292,
+      "B": 21.433
+    }
+  },
+  {
+    "number": "K-14118/K-14283",
+    "dimensions": {
+      "d": 30,
+      "D": 72.085,
+      "B": 22.385
+    }
+  },
+  {
+    "number": "K-14118/K-14276",
+    "dimensions": {
+      "d": 30,
+      "D": 69.012,
+      "B": 19.845
+    }
+  },
+  {
+    "number": "331274",
+    "dimensions": {
+      "d": 29,
+      "D": 50.292,
+      "B": 14.224
+    }
+  },
+  {
+    "number": "K-02474/K-02420",
+    "dimensions": {
+      "d": 28.575,
+      "D": 68.262,
+      "B": 22.225
+    }
+  },
+  {
+    "number": "K-M 86647/K-M 86610",
+    "dimensions": {
+      "d": 28.575,
+      "D": 64.292,
+      "B": 21.433
+    }
+  },
+  {
+    "number": "K-15112/K-15250 X",
+    "dimensions": {
+      "d": 28.575,
+      "D": 63.5,
+      "B": 20.638
+    }
+  },
+  {
+    "number": "K-15112/K-15245",
+    "dimensions": {
+      "d": 28.575,
+      "D": 62,
+      "B": 19.05
+    }
+  },
+  {
+    "number": "K-1988/K-1922",
+    "dimensions": {
+      "d": 28.575,
+      "D": 57.15,
+      "B": 19.845
+    }
+  },
+  {
+    "number": "K-L44649/K-L 44610",
+    "dimensions": {
+      "d": 26.988,
+      "D": 50.292,
+      "B": 14.224
+    }
+  },
+  {
+    "number": "K-15101/K-15250 X",
+    "dimensions": {
+      "d": 25.4,
+      "D": 63.5,
+      "B": 20.638
+    }
+  },
+  {
+    "number": "K-15101/K-15245",
+    "dimensions": {
+      "d": 25.4,
+      "D": 62,
+      "B": 19.05
+    }
+  },
+  {
+    "number": "K-M84548/K-M 84510",
+    "dimensions": {
+      "d": 25.4,
+      "D": 57.15,
+      "B": 19.431
+    }
+  },
+  {
+    "number": "K-07100 SA/K-07210 X",
+    "dimensions": {
+      "d": 25.4,
+      "D": 50.8,
+      "B": 15.011
+    }
+  },
+  {
+    "number": "K-07100 S/K-07210 X",
+    "dimensions": {
+      "d": 25.4,
+      "D": 50.8,
+      "B": 15.011
+    }
+  },
+  {
+    "number": "K-L 44643/K-L44610",
+    "dimensions": {
+      "d": 25.4,
+      "D": 50292,
+      "B": 14.224
+    }
+  },
+  {
+    "number": "K-1380/K-1328",
+    "dimensions": {
+      "d": 22.225,
+      "D": 52.388,
+      "B": 19.368
+    }
+  },
+  {
+    "number": "K-07087 X/K-07210 X",
+    "dimensions": {
+      "d": 22.225,
+      "D": 50.8,
+      "B": 15.011
+    }
+  },
+  {
+    "number": "K-LM 12749/K-LM12711",
+    "dimensions": {
+      "d": 21.986,
+      "D": 45.974,
+      "B": 15.494
+    }
+  },
+  {
+    "number": "K-LM 12749/K-LM 12710",
+    "dimensions": {
+      "d": 21.986,
+      "D": 45.237,
+      "B": 15.494
+    }
+  },
+  {
+    "number": "K-M 12649/K-M 12610",
+    "dimensions": {
+      "d": 21.43,
+      "D": 50.005,
+      "B": 17.526
+    }
+  },
+  {
+    "number": "K-09081/K-09196",
+    "dimensions": {
+      "d": 20.625,
+      "D": 49.225,
+      "B": 23.02
+    }
+  },
+  {
+    "number": "K-09081/K-09195",
+    "dimensions": {
+      "d": 20.625,
+      "D": 49.225,
+      "B": 19.845
+    }
+  },
+  {
+    "number": "K-21075/K-21212",
+    "dimensions": {
+      "d": 19.05,
+      "D": 53.975,
+      "B": 22.225
+    }
+  },
+  {
+    "number": "K-09078/K-09196",
+    "dimensions": {
+      "d": 19.05,
+      "D": 49.225,
+      "B": 23.02
+    }
+  },
+  {
+    "number": "K-09074/K-09196",
+    "dimensions": {
+      "d": 19.05,
+      "D": 49.225,
+      "B": 23.02
+    }
+  },
+  {
+    "number": "K-09067/K-09196",
+    "dimensions": {
+      "d": 19.05,
+      "D": 49.225,
+      "B": 21.209
+    }
+  },
+  {
+    "number": "K-09078/K-09195",
+    "dimensions": {
+      "d": 19.05,
+      "D": 49.225,
+      "B": 19.845
+    }
+  },
+  {
+    "number": "K-09074/K-09195",
+    "dimensions": {
+      "d": 19.05,
+      "D": 49.225,
+      "B": 19.845
+    }
+  },
+  {
+    "number": "K-09067/K-09195",
+    "dimensions": {
+      "d": 19.05,
+      "D": 49.225,
+      "B": 18.034
+    }
+  },
+  {
+    "number": "K-LM 11949/K-LM 11910",
+    "dimensions": {
+      "d": 19.05,
+      "D": 45.237,
+      "B": 15.494
+    }
+  },
+  {
+    "number": "11710 K-LM 11749/K-LM",
+    "dimensions": {
+      "d": 17.462,
+      "D": 39.878,
+      "B": 13.843
+    }
+  },
+  {
+    "number": "K-11590/K-11520",
+    "dimensions": {
+      "d": 15.875,
+      "D": 42.862,
+      "B": 14.288
+    }
+  },
+  {
+    "number": "K-03062/K-03162",
+    "dimensions": {
+      "d": 15.875,
+      "D": 41.275,
+      "B": 14.288
+    }
+  },
+  {
+    "number": "K-A 4059/K-A 4138",
+    "dimensions": {
+      "d": 14.989,
+      "D": 34.988,
+      "B": 10.998
+    }
+  }
+];
+        
+        // داده‌های بلبرینگ‌های شیار عمیق - اینجا جایگذاری کنید
+        let metricBearings = [
+  {
+    "number": "699",
+    "dimensions": {
+      "d": 9,
+      "D": 20,
+      "B": 6
+    }
+  },
+  {
+    "number": "689W4",
+    "dimensions": {
+      "d": 9,
+      "D": 17,
+      "B": 4
+    }
+  },
+  {
+    "number": "689",
+    "dimensions": {
+      "d": 9,
+      "D": 17,
+      "B": 5
+    }
+  },
+  {
+    "number": "628",
+    "dimensions": {
+      "d": 8,
+      "D": 24,
+      "B": 8
+    }
+  },
+  {
+    "number": "698",
+    "dimensions": {
+      "d": 8,
+      "D": 19,
+      "B": 6
+    }
+  },
+  {
+    "number": "688W6",
+    "dimensions": {
+      "d": 8,
+      "D": 16,
+      "B": 6
+    }
+  },
+  {
+    "number": "688W4",
+    "dimensions": {
+      "d": 8,
+      "D": 16,
+      "B": 4
+    }
+  },
+  {
+    "number": "688",
+    "dimensions": {
+      "d": 8,
+      "D": 16,
+      "B": 5
+    }
+  },
+  {
+    "number": "697",
+    "dimensions": {
+      "d": 7,
+      "D": 17,
+      "B": 5
+    }
+  },
+  {
+    "number": "687W3.5",
+    "dimensions": {
+      "d": 7,
+      "D": 14,
+      "B": 3.5
+    }
+  },
+  {
+    "number": "687",
+    "dimensions": {
+      "d": 7,
+      "D": 14,
+      "B": 5
+    }
+  },
+  {
+    "number": "636",
+    "dimensions": {
+      "d": 6,
+      "D": 22,
+      "B": 7
+    }
+  },
+  {
+    "number": "606",
+    "dimensions": {
+      "d": 6,
+      "D": 17,
+      "B": 6
+    }
+  },
+  {
+    "number": "696",
+    "dimensions": {
+      "d": 6,
+      "D": 15,
+      "B": 5
+    }
+  },
+  {
+    "number": "686W3.5",
+    "dimensions": {
+      "d": 6,
+      "D": 13,
+      "B": 3.5
+    }
+  },
+  {
+    "number": "686",
+    "dimensions": {
+      "d": 6,
+      "D": 13,
+      "B": 5
+    }
+  },
+  {
+    "number": "605",
+    "dimensions": {
+      "d": 5,
+      "D": 14,
+      "B": 5
+    }
+  },
+  {
+    "number": "695",
+    "dimensions": {
+      "d": 5,
+      "D": 13,
+      "B": 4
+    }
+  },
+  {
+    "number": "685W3",
+    "dimensions": {
+      "d": 5,
+      "D": 11,
+      "B": 3
+    }
+  },
+  {
+    "number": "685",
+    "dimensions": {
+      "d": 5,
+      "D": 11,
+      "B": 5
+    }
+  },
+  {
+    "number": "694",
+    "dimensions": {
+      "d": 4,
+      "D": 11,
+      "B": 4
+    }
+  },
+  {
+    "number": "684W2.5",
+    "dimensions": {
+      "d": 4,
+      "D": 9,
+      "B": 2.5
+    }
+  },
+  {
+    "number": "684",
+    "dimensions": {
+      "d": 4,
+      "D": 9,
+      "B": 4
+    }
+  },
+  {
+    "number": "603",
+    "dimensions": {
+      "d": 3,
+      "D": 9,
+      "B": 5
+    }
+  },
+  {
+    "number": "693W3",
+    "dimensions": {
+      "d": 3,
+      "D": 8,
+      "B": 3
+    }
+  },
+  {
+    "number": "693",
+    "dimensions": {
+      "d": 3,
+      "D": 8,
+      "B": 4
+    }
+  },
+  {
+    "number": "683W2",
+    "dimensions": {
+      "d": 3,
+      "D": 7,
+      "B": 2
+    }
+  },
+  {
+    "number": "683",
+    "dimensions": {
+      "d": 3,
+      "D": 7,
+      "B": 3
+    }
+  },
+  {
+    "number": "692W2.3",
+    "dimensions": {
+      "d": 2,
+      "D": 6,
+      "B": 2.3
+    }
+  },
+  {
+    "number": "692",
+    "dimensions": {
+      "d": 2,
+      "D": 6,
+      "B": 3
+    }
+  },
+  {
+    "number": "682",
+    "dimensions": {
+      "d": 2,
+      "D": 5,
+      "B": 2.3
+    }
+  },
+  {
+    "number": "682W1.5",
+    "dimensions": {
+      "d": 2,
+      "D": 5,
+      "B": 1.5
+    }
+  },
+  {
+    "number": "618/1060",
+    "dimensions": {
+      "d": 1060,
+      "D": 1280,
+      "B": 100
+    }
+  },
+  {
+    "number": "618/1000",
+    "dimensions": {
+      "d": 1000,
+      "D": 1220,
+      "B": 100
+    }
+  },
+  {
+    "number": "618/900",
+    "dimensions": {
+      "d": 900,
+      "D": 1090,
+      "B": 85
+    }
+  },
+  {
+    "number": "618/850",
+    "dimensions": {
+      "d": 850,
+      "D": 1030,
+      "B": 82
+    }
+  },
+  {
+    "number": "618/800",
+    "dimensions": {
+      "d": 800,
+      "D": 980,
+      "B": 82
+    }
+  },
+  {
+    "number": "619/750",
+    "dimensions": {
+      "d": 750,
+      "D": 920,
+      "B": 112
+    }
+  },
+  {
+    "number": "618/750",
+    "dimensions": {
+      "d": 750,
+      "D": 920,
+      "B": 78
+    }
+  },
+  {
+    "number": "60/710",
+    "dimensions": {
+      "d": 710,
+      "D": 1030,
+      "B": 140
+    }
+  },
+  {
+    "number": "619/710",
+    "dimensions": {
+      "d": 710,
+      "D": 950,
+      "B": 106
+    }
+  },
+  {
+    "number": "618/710",
+    "dimensions": {
+      "d": 710,
+      "D": 870,
+      "B": 74
+    }
+  },
+  {
+    "number": "60/670",
+    "dimensions": {
+      "d": 670,
+      "D": 980,
+      "B": 136
+    }
+  },
+  {
+    "number": "619/670",
+    "dimensions": {
+      "d": 670,
+      "D": 900,
+      "B": 103
+    }
+  },
+  {
+    "number": "618/670",
+    "dimensions": {
+      "d": 670,
+      "D": 820,
+      "B": 69
+    }
+  },
+  {
+    "number": "60/630",
+    "dimensions": {
+      "d": 630,
+      "D": 920,
+      "B": 128
+    }
+  },
+  {
+    "number": "619/630",
+    "dimensions": {
+      "d": 630,
+      "D": 850,
+      "B": 100
+    }
+  },
+  {
+    "number": "618/630",
+    "dimensions": {
+      "d": 630,
+      "D": 780,
+      "B": 69
+    }
+  },
+  {
+    "number": "619/600",
+    "dimensions": {
+      "d": 600,
+      "D": 800,
+      "B": 90
+    }
+  },
+  {
+    "number": "618/600",
+    "dimensions": {
+      "d": 600,
+      "D": 730,
+      "B": 60
+    }
+  },
+  {
+    "number": "60/560",
+    "dimensions": {
+      "d": 560,
+      "D": 820,
+      "B": 115
+    }
+  },
+  {
+    "number": "619/560",
+    "dimensions": {
+      "d": 560,
+      "D": 750,
+      "B": 85
+    }
+  },
+  {
+    "number": "618/560",
+    "dimensions": {
+      "d": 560,
+      "D": 680,
+      "B": 56
+    }
+  },
+  {
+    "number": "60/530",
+    "dimensions": {
+      "d": 530,
+      "D": 780,
+      "B": 112
+    }
+  },
+  {
+    "number": "619/530",
+    "dimensions": {
+      "d": 530,
+      "D": 710,
+      "B": 82
+    }
+  },
+  {
+    "number": "618/530",
+    "dimensions": {
+      "d": 530,
+      "D": 650,
+      "B": 56
+    }
+  },
+  {
+    "number": "60/500",
+    "dimensions": {
+      "d": 500,
+      "D": 720,
+      "B": 100
+    }
+  },
+  {
+    "number": "619/500",
+    "dimensions": {
+      "d": 500,
+      "D": 670,
+      "B": 78
+    }
+  },
+  {
+    "number": "618/500",
+    "dimensions": {
+      "d": 500,
+      "D": 620,
+      "B": 56
+    }
+  },
+  {
+    "number": "6096",
+    "dimensions": {
+      "d": 480,
+      "D": 700,
+      "B": 100
+    }
+  },
+  {
+    "number": "6996",
+    "dimensions": {
+      "d": 480,
+      "D": 650,
+      "B": 78
+    }
+  },
+  {
+    "number": "6896",
+    "dimensions": {
+      "d": 480,
+      "D": 600,
+      "B": 56
+    }
+  },
+  {
+    "number": "6092",
+    "dimensions": {
+      "d": 460,
+      "D": 680,
+      "B": 100
+    }
+  },
+  {
+    "number": "6992",
+    "dimensions": {
+      "d": 460,
+      "D": 620,
+      "B": 74
+    }
+  },
+  {
+    "number": "6892",
+    "dimensions": {
+      "d": 460,
+      "D": 580,
+      "B": 56
+    }
+  },
+  {
+    "number": "6088",
+    "dimensions": {
+      "d": 440,
+      "D": 650,
+      "B": 94
+    }
+  },
+  {
+    "number": "6988",
+    "dimensions": {
+      "d": 440,
+      "D": 600,
+      "B": 74
+    }
+  },
+  {
+    "number": "6888",
+    "dimensions": {
+      "d": 440,
+      "D": 540,
+      "B": 46
+    }
+  },
+  {
+    "number": "6084",
+    "dimensions": {
+      "d": 420,
+      "D": 620,
+      "B": 90
+    }
+  },
+  {
+    "number": "6984",
+    "dimensions": {
+      "d": 420,
+      "D": 560,
+      "B": 65
+    }
+  },
+  {
+    "number": "6884",
+    "dimensions": {
+      "d": 420,
+      "D": 520,
+      "B": 46
+    }
+  },
+  {
+    "number": "6080",
+    "dimensions": {
+      "d": 400,
+      "D": 600,
+      "B": 90
+    }
+  },
+  {
+    "number": "6980",
+    "dimensions": {
+      "d": 400,
+      "D": 540,
+      "B": 65
+    }
+  },
+  {
+    "number": "6880",
+    "dimensions": {
+      "d": 400,
+      "D": 500,
+      "B": 46
+    }
+  },
+  {
+    "number": "6076",
+    "dimensions": {
+      "d": 380,
+      "D": 560,
+      "B": 82
+    }
+  },
+  {
+    "number": "6070",
+    "dimensions": {
+      "d": 380,
+      "D": 560,
+      "B": 57
+    }
+  },
+  {
+    "number": "6976",
+    "dimensions": {
+      "d": 380,
+      "D": 520,
+      "B": 65
+    }
+  },
+  {
+    "number": "6876",
+    "dimensions": {
+      "d": 380,
+      "D": 480,
+      "B": 46
+    }
+  },
+  {
+    "number": "6072",
+    "dimensions": {
+      "d": 360,
+      "D": 540,
+      "B": 82
+    }
+  },
+  {
+    "number": "16072",
+    "dimensions": {
+      "d": 360,
+      "D": 540,
+      "B": 57
+    }
+  },
+  {
+    "number": "6972",
+    "dimensions": {
+      "d": 360,
+      "D": 480,
+      "B": 56
+    }
+  },
+  {
+    "number": "6872",
+    "dimensions": {
+      "d": 360,
+      "D": 440,
+      "B": 38
+    }
+  },
+  {
+    "number": "6068",
+    "dimensions": {
+      "d": 340,
+      "D": 520,
+      "B": 82
+    }
+  },
+  {
+    "number": "16068",
+    "dimensions": {
+      "d": 340,
+      "D": 520,
+      "B": 57
+    }
+  },
+  {
+    "number": "6968",
+    "dimensions": {
+      "d": 340,
+      "D": 460,
+      "B": 56
+    }
+  },
+  {
+    "number": "6868",
+    "dimensions": {
+      "d": 340,
+      "D": 420,
+      "B": 38
+    }
+  },
+  {
+    "number": "6064",
+    "dimensions": {
+      "d": 320,
+      "D": 480,
+      "B": 74
+    }
+  },
+  {
+    "number": "16064",
+    "dimensions": {
+      "d": 320,
+      "D": 480,
+      "B": 50
+    }
+  },
+  {
+    "number": "6964",
+    "dimensions": {
+      "d": 320,
+      "D": 440,
+      "B": 56
+    }
+  },
+  {
+    "number": "6864",
+    "dimensions": {
+      "d": 320,
+      "D": 400,
+      "B": 38
+    }
+  },
+  {
+    "number": "6060",
+    "dimensions": {
+      "d": 300,
+      "D": 460,
+      "B": 74
+    }
+  },
+  {
+    "number": "16060",
+    "dimensions": {
+      "d": 300,
+      "D": 460,
+      "B": 50
+    }
+  },
+  {
+    "number": "6960",
+    "dimensions": {
+      "d": 300,
+      "D": 420,
+      "B": 56
+    }
+  },
+  {
+    "number": "6860",
+    "dimensions": {
+      "d": 300,
+      "D": 380,
+      "B": 38
+    }
+  },
+  {
+    "number": "6256",
+    "dimensions": {
+      "d": 280,
+      "D": 500,
+      "B": 80
+    }
+  },
+  {
+    "number": "6056",
+    "dimensions": {
+      "d": 280,
+      "D": 420,
+      "B": 65
+    }
+  },
+  {
+    "number": "16056",
+    "dimensions": {
+      "d": 280,
+      "D": 420,
+      "B": 44
+    }
+  },
+  {
+    "number": "6956",
+    "dimensions": {
+      "d": 280,
+      "D": 380,
+      "B": 46
+    }
+  },
+  {
+    "number": "6856",
+    "dimensions": {
+      "d": 280,
+      "D": 350,
+      "B": 33
+    }
+  },
+  {
+    "number": "6252",
+    "dimensions": {
+      "d": 260,
+      "D": 480,
+      "B": 80
+    }
+  },
+  {
+    "number": "6052",
+    "dimensions": {
+      "d": 260,
+      "D": 400,
+      "B": 65
+    }
+  },
+  {
+    "number": "16052",
+    "dimensions": {
+      "d": 260,
+      "D": 400,
+      "B": 44
+    }
+  },
+  {
+    "number": "6952",
+    "dimensions": {
+      "d": 260,
+      "D": 360,
+      "B": 46
+    }
+  },
+  {
+    "number": "6852",
+    "dimensions": {
+      "d": 260,
+      "D": 320,
+      "B": 28
+    }
+  },
+  {
+    "number": "6248",
+    "dimensions": {
+      "d": 240,
+      "D": 440,
+      "B": 72
+    }
+  },
+  {
+    "number": "6048",
+    "dimensions": {
+      "d": 240,
+      "D": 360,
+      "B": 56
+    }
+  },
+  {
+    "number": "16048",
+    "dimensions": {
+      "d": 240,
+      "D": 360,
+      "B": 37
+    }
+  },
+  {
+    "number": "6948",
+    "dimensions": {
+      "d": 240,
+      "D": 320,
+      "B": 38
+    }
+  },
+  {
+    "number": "6848",
+    "dimensions": {
+      "d": 240,
+      "D": 300,
+      "B": 28
+    }
+  },
+  {
+    "number": "6344",
+    "dimensions": {
+      "d": 220,
+      "D": 460,
+      "B": 88
+    }
+  },
+  {
+    "number": "6244",
+    "dimensions": {
+      "d": 220,
+      "D": 400,
+      "B": 65
+    }
+  },
+  {
+    "number": "6044",
+    "dimensions": {
+      "d": 220,
+      "D": 340,
+      "B": 56
+    }
+  },
+  {
+    "number": "16044",
+    "dimensions": {
+      "d": 220,
+      "D": 340,
+      "B": 37
+    }
+  },
+  {
+    "number": "6944",
+    "dimensions": {
+      "d": 220,
+      "D": 300,
+      "B": 38
+    }
+  },
+  {
+    "number": "6844",
+    "dimensions": {
+      "d": 220,
+      "D": 270,
+      "B": 24
+    }
+  },
+  {
+    "number": "6340",
+    "dimensions": {
+      "d": 200,
+      "D": 420,
+      "B": 80
+    }
+  },
+  {
+    "number": "6240",
+    "dimensions": {
+      "d": 200,
+      "D": 360,
+      "B": 58
+    }
+  },
+  {
+    "number": "6040",
+    "dimensions": {
+      "d": 200,
+      "D": 310,
+      "B": 51
+    }
+  },
+  {
+    "number": "16040",
+    "dimensions": {
+      "d": 200,
+      "D": 310,
+      "B": 34
+    }
+  },
+  {
+    "number": "6940",
+    "dimensions": {
+      "d": 200,
+      "D": 280,
+      "B": 38
+    }
+  },
+  {
+    "number": "6840",
+    "dimensions": {
+      "d": 200,
+      "D": 250,
+      "B": 24
+    }
+  },
+  {
+    "number": "6338",
+    "dimensions": {
+      "d": 190,
+      "D": 400,
+      "B": 78
+    }
+  },
+  {
+    "number": "6238",
+    "dimensions": {
+      "d": 190,
+      "D": 340,
+      "B": 55
+    }
+  },
+  {
+    "number": "6038",
+    "dimensions": {
+      "d": 190,
+      "D": 290,
+      "B": 46
+    }
+  },
+  {
+    "number": "16038",
+    "dimensions": {
+      "d": 190,
+      "D": 290,
+      "B": 31
+    }
+  },
+  {
+    "number": "6938",
+    "dimensions": {
+      "d": 190,
+      "D": 260,
+      "B": 33
+    }
+  },
+  {
+    "number": "6838",
+    "dimensions": {
+      "d": 190,
+      "D": 240,
+      "B": 24
+    }
+  },
+  {
+    "number": "6336",
+    "dimensions": {
+      "d": 180,
+      "D": 380,
+      "B": 75
+    }
+  },
+  {
+    "number": "6236",
+    "dimensions": {
+      "d": 180,
+      "D": 320,
+      "B": 52
+    }
+  },
+  {
+    "number": "6036",
+    "dimensions": {
+      "d": 180,
+      "D": 280,
+      "B": 46
+    }
+  },
+  {
+    "number": "16036",
+    "dimensions": {
+      "d": 180,
+      "D": 280,
+      "B": 31
+    }
+  },
+  {
+    "number": "6936",
+    "dimensions": {
+      "d": 180,
+      "D": 250,
+      "B": 33
+    }
+  },
+  {
+    "number": "6836",
+    "dimensions": {
+      "d": 180,
+      "D": 225,
+      "B": 22
+    }
+  },
+  {
+    "number": "6334",
+    "dimensions": {
+      "d": 170,
+      "D": 360,
+      "B": 72
+    }
+  },
+  {
+    "number": "6234",
+    "dimensions": {
+      "d": 170,
+      "D": 310,
+      "B": 52
+    }
+  },
+  {
+    "number": "6034",
+    "dimensions": {
+      "d": 170,
+      "D": 260,
+      "B": 42
+    }
+  },
+  {
+    "number": "16034",
+    "dimensions": {
+      "d": 170,
+      "D": 260,
+      "B": 28
+    }
+  },
+  {
+    "number": "6934",
+    "dimensions": {
+      "d": 170,
+      "D": 230,
+      "B": 28
+    }
+  },
+  {
+    "number": "6834",
+    "dimensions": {
+      "d": 170,
+      "D": 215,
+      "B": 22
+    }
+  },
+  {
+    "number": "6332",
+    "dimensions": {
+      "d": 160,
+      "D": 340,
+      "B": 68
+    }
+  },
+  {
+    "number": "6232",
+    "dimensions": {
+      "d": 160,
+      "D": 290,
+      "B": 48
+    }
+  },
+  {
+    "number": "6032",
+    "dimensions": {
+      "d": 160,
+      "D": 240,
+      "B": 38
+    }
+  },
+  {
+    "number": "16032",
+    "dimensions": {
+      "d": 160,
+      "D": 240,
+      "B": 25
+    }
+  },
+  {
+    "number": "6932",
+    "dimensions": {
+      "d": 160,
+      "D": 220,
+      "B": 28
+    }
+  },
+  {
+    "number": "6832",
+    "dimensions": {
+      "d": 160,
+      "D": 200,
+      "B": 20
+    }
+  },
+  {
+    "number": "6330",
+    "dimensions": {
+      "d": 150,
+      "D": 320,
+      "B": 65
+    }
+  },
+  {
+    "number": "6230",
+    "dimensions": {
+      "d": 150,
+      "D": 270,
+      "B": 45
+    }
+  },
+  {
+    "number": "6030",
+    "dimensions": {
+      "d": 150,
+      "D": 225,
+      "B": 35
+    }
+  },
+  {
+    "number": "16030",
+    "dimensions": {
+      "d": 150,
+      "D": 225,
+      "B": 24
+    }
+  },
+  {
+    "number": "6930",
+    "dimensions": {
+      "d": 150,
+      "D": 210,
+      "B": 28
+    }
+  },
+  {
+    "number": "6830",
+    "dimensions": {
+      "d": 150,
+      "D": 190,
+      "B": 20
+    }
+  },
+  {
+    "number": "6328",
+    "dimensions": {
+      "d": 140,
+      "D": 300,
+      "B": 62
+    }
+  },
+  {
+    "number": "6228",
+    "dimensions": {
+      "d": 140,
+      "D": 250,
+      "B": 42
+    }
+  },
+  {
+    "number": "6028",
+    "dimensions": {
+      "d": 140,
+      "D": 210,
+      "B": 33
+    }
+  },
+  {
+    "number": "16028",
+    "dimensions": {
+      "d": 140,
+      "D": 210,
+      "B": 22
+    }
+  },
+  {
+    "number": "6928",
+    "dimensions": {
+      "d": 140,
+      "D": 190,
+      "B": 24
+    }
+  },
+  {
+    "number": "6828",
+    "dimensions": {
+      "d": 140,
+      "D": 175,
+      "B": 18
+    }
+  },
+  {
+    "number": "6326",
+    "dimensions": {
+      "d": 130,
+      "D": 280,
+      "B": 58
+    }
+  },
+  {
+    "number": "6226",
+    "dimensions": {
+      "d": 130,
+      "D": 230,
+      "B": 40
+    }
+  },
+  {
+    "number": "6026",
+    "dimensions": {
+      "d": 130,
+      "D": 200,
+      "B": 33
+    }
+  },
+  {
+    "number": "16026",
+    "dimensions": {
+      "d": 130,
+      "D": 200,
+      "B": 22
+    }
+  },
+  {
+    "number": "6926",
+    "dimensions": {
+      "d": 130,
+      "D": 180,
+      "B": 24
+    }
+  },
+  {
+    "number": "6826",
+    "dimensions": {
+      "d": 130,
+      "D": 165,
+      "B": 18
+    }
+  },
+  {
+    "number": "6324",
+    "dimensions": {
+      "d": 120,
+      "D": 260,
+      "B": 55
+    }
+  },
+  {
+    "number": "6224",
+    "dimensions": {
+      "d": 120,
+      "D": 215,
+      "B": 40
+    }
+  },
+  {
+    "number": "6024",
+    "dimensions": {
+      "d": 120,
+      "D": 180,
+      "B": 28
+    }
+  },
+  {
+    "number": "16024",
+    "dimensions": {
+      "d": 120,
+      "D": 180,
+      "B": 19
+    }
+  },
+  {
+    "number": "6924",
+    "dimensions": {
+      "d": 120,
+      "D": 165,
+      "B": 22
+    }
+  },
+  {
+    "number": "6824",
+    "dimensions": {
+      "d": 120,
+      "D": 150,
+      "B": 16
+    }
+  },
+  {
+    "number": "6322",
+    "dimensions": {
+      "d": 110,
+      "D": 240,
+      "B": 50
+    }
+  },
+  {
+    "number": "6222",
+    "dimensions": {
+      "d": 110,
+      "D": 200,
+      "B": 38
+    }
+  },
+  {
+    "number": "6022",
+    "dimensions": {
+      "d": 110,
+      "D": 170,
+      "B": 28
+    }
+  },
+  {
+    "number": "16022",
+    "dimensions": {
+      "d": 110,
+      "D": 170,
+      "B": 19
+    }
+  },
+  {
+    "number": "6922",
+    "dimensions": {
+      "d": 110,
+      "D": 150,
+      "B": 20
+    }
+  },
+  {
+    "number": "6822",
+    "dimensions": {
+      "d": 110,
+      "D": 140,
+      "B": 16
+    }
+  },
+  {
+    "number": "6321",
+    "dimensions": {
+      "d": 105,
+      "D": 225,
+      "B": 49
+    }
+  },
+  {
+    "number": "6221",
+    "dimensions": {
+      "d": 105,
+      "D": 190,
+      "B": 36
+    }
+  },
+  {
+    "number": "6021",
+    "dimensions": {
+      "d": 105,
+      "D": 160,
+      "B": 26
+    }
+  },
+  {
+    "number": "16021",
+    "dimensions": {
+      "d": 105,
+      "D": 160,
+      "B": 18
+    }
+  },
+  {
+    "number": "6921",
+    "dimensions": {
+      "d": 105,
+      "D": 145,
+      "B": 20
+    }
+  },
+  {
+    "number": "6821",
+    "dimensions": {
+      "d": 105,
+      "D": 130,
+      "B": 13
+    }
+  },
+  {
+    "number": "6320",
+    "dimensions": {
+      "d": 100,
+      "D": 215,
+      "B": 47
+    }
+  },
+  {
+    "number": "6220",
+    "dimensions": {
+      "d": 100,
+      "D": 180,
+      "B": 34
+    }
+  },
+  {
+    "number": "6020",
+    "dimensions": {
+      "d": 100,
+      "D": 150,
+      "B": 24
+    }
+  },
+  {
+    "number": "16020",
+    "dimensions": {
+      "d": 100,
+      "D": 150,
+      "B": 16
+    }
+  },
+  {
+    "number": "6920",
+    "dimensions": {
+      "d": 100,
+      "D": 140,
+      "B": 20
+    }
+  },
+  {
+    "number": "6820",
+    "dimensions": {
+      "d": 100,
+      "D": 125,
+      "B": 13
+    }
+  },
+  {
+    "number": "6319",
+    "dimensions": {
+      "d": 95,
+      "D": 200,
+      "B": 45
+    }
+  },
+  {
+    "number": "6219",
+    "dimensions": {
+      "d": 95,
+      "D": 170,
+      "B": 32
+    }
+  },
+  {
+    "number": "6019",
+    "dimensions": {
+      "d": 95,
+      "D": 145,
+      "B": 24
+    }
+  },
+  {
+    "number": "16019",
+    "dimensions": {
+      "d": 95,
+      "D": 145,
+      "B": 16
+    }
+  },
+  {
+    "number": "6919",
+    "dimensions": {
+      "d": 95,
+      "D": 130,
+      "B": 18
+    }
+  },
+  {
+    "number": "6819",
+    "dimensions": {
+      "d": 95,
+      "D": 120,
+      "B": 13
+    }
+  },
+  {
+    "number": "6418",
+    "dimensions": {
+      "d": 90,
+      "D": 225,
+      "B": 54
+    }
+  },
+  {
+    "number": "6318",
+    "dimensions": {
+      "d": 90,
+      "D": 190,
+      "B": 43
+    }
+  },
+  {
+    "number": "6218",
+    "dimensions": {
+      "d": 90,
+      "D": 160,
+      "B": 30
+    }
+  },
+  {
+    "number": "6018",
+    "dimensions": {
+      "d": 90,
+      "D": 140,
+      "B": 24
+    }
+  },
+  {
+    "number": "16018",
+    "dimensions": {
+      "d": 90,
+      "D": 140,
+      "B": 16
+    }
+  },
+  {
+    "number": "6918",
+    "dimensions": {
+      "d": 90,
+      "D": 125,
+      "B": 18
+    }
+  },
+  {
+    "number": "6818",
+    "dimensions": {
+      "d": 90,
+      "D": 115,
+      "B": 13
+    }
+  },
+  {
+    "number": "6417",
+    "dimensions": {
+      "d": 85,
+      "D": 210,
+      "B": 52
+    }
+  },
+  {
+    "number": "6317",
+    "dimensions": {
+      "d": 85,
+      "D": 180,
+      "B": 41
+    }
+  },
+  {
+    "number": "6217",
+    "dimensions": {
+      "d": 85,
+      "D": 150,
+      "B": 28
+    }
+  },
+  {
+    "number": "6017",
+    "dimensions": {
+      "d": 85,
+      "D": 130,
+      "B": 22
+    }
+  },
+  {
+    "number": "16017",
+    "dimensions": {
+      "d": 85,
+      "D": 130,
+      "B": 14
+    }
+  },
+  {
+    "number": "6917",
+    "dimensions": {
+      "d": 85,
+      "D": 120,
+      "B": 18
+    }
+  },
+  {
+    "number": "6817",
+    "dimensions": {
+      "d": 85,
+      "D": 110,
+      "B": 13
+    }
+  },
+  {
+    "number": "6416",
+    "dimensions": {
+      "d": 80,
+      "D": 200,
+      "B": 48
+    }
+  },
+  {
+    "number": "6316",
+    "dimensions": {
+      "d": 80,
+      "D": 170,
+      "B": 39
+    }
+  },
+  {
+    "number": "6216",
+    "dimensions": {
+      "d": 80,
+      "D": 140,
+      "B": 26
+    }
+  },
+  {
+    "number": "6016",
+    "dimensions": {
+      "d": 80,
+      "D": 125,
+      "B": 22
+    }
+  },
+  {
+    "number": "16016",
+    "dimensions": {
+      "d": 80,
+      "D": 125,
+      "B": 14
+    }
+  },
+  {
+    "number": "6916",
+    "dimensions": {
+      "d": 80,
+      "D": 110,
+      "B": 16
+    }
+  },
+  {
+    "number": "6816",
+    "dimensions": {
+      "d": 80,
+      "D": 100,
+      "B": 10
+    }
+  },
+  {
+    "number": "6415",
+    "dimensions": {
+      "d": 75,
+      "D": 190,
+      "B": 45
+    }
+  },
+  {
+    "number": "6315",
+    "dimensions": {
+      "d": 75,
+      "D": 160,
+      "B": 37
+    }
+  },
+  {
+    "number": "6215",
+    "dimensions": {
+      "d": 75,
+      "D": 130,
+      "B": 25
+    }
+  },
+  {
+    "number": "6015",
+    "dimensions": {
+      "d": 75,
+      "D": 115,
+      "B": 20
+    }
+  },
+  {
+    "number": "16015",
+    "dimensions": {
+      "d": 75,
+      "D": 115,
+      "B": 13
+    }
+  },
+  {
+    "number": "6915",
+    "dimensions": {
+      "d": 75,
+      "D": 105,
+      "B": 16
+    }
+  },
+  {
+    "number": "6815",
+    "dimensions": {
+      "d": 75,
+      "D": 95,
+      "B": 10
+    }
+  },
+  {
+    "number": "6414",
+    "dimensions": {
+      "d": 70,
+      "D": 180,
+      "B": 42
+    }
+  },
+  {
+    "number": "6314",
+    "dimensions": {
+      "d": 70,
+      "D": 150,
+      "B": 35
+    }
+  },
+  {
+    "number": "6214",
+    "dimensions": {
+      "d": 70,
+      "D": 125,
+      "B": 24
+    }
+  },
+  {
+    "number": "6014",
+    "dimensions": {
+      "d": 70,
+      "D": 110,
+      "B": 20
+    }
+  },
+  {
+    "number": "16014",
+    "dimensions": {
+      "d": 70,
+      "D": 110,
+      "B": 13
+    }
+  },
+  {
+    "number": "6914",
+    "dimensions": {
+      "d": 70,
+      "D": 100,
+      "B": 16
+    }
+  },
+  {
+    "number": "6814",
+    "dimensions": {
+      "d": 70,
+      "D": 90,
+      "B": 10
+    }
+  },
+  {
+    "number": "6413",
+    "dimensions": {
+      "d": 65,
+      "D": 160,
+      "B": 37
+    }
+  },
+  {
+    "number": "6313",
+    "dimensions": {
+      "d": 65,
+      "D": 140,
+      "B": 33
+    }
+  },
+  {
+    "number": "6213",
+    "dimensions": {
+      "d": 65,
+      "D": 120,
+      "B": 23
+    }
+  },
+  {
+    "number": "6013",
+    "dimensions": {
+      "d": 65,
+      "D": 100,
+      "B": 18
+    }
+  },
+  {
+    "number": "16013",
+    "dimensions": {
+      "d": 65,
+      "D": 100,
+      "B": 11
+    }
+  },
+  {
+    "number": "6913",
+    "dimensions": {
+      "d": 65,
+      "D": 90,
+      "B": 13
+    }
+  },
+  {
+    "number": "6813",
+    "dimensions": {
+      "d": 65,
+      "D": 85,
+      "B": 10
+    }
+  },
+  {
+    "number": "6412",
+    "dimensions": {
+      "d": 60,
+      "D": 150,
+      "B": 35
+    }
+  },
+  {
+    "number": "6312",
+    "dimensions": {
+      "d": 60,
+      "D": 130,
+      "B": 31
+    }
+  },
+  {
+    "number": "6212",
+    "dimensions": {
+      "d": 60,
+      "D": 110,
+      "B": 22
+    }
+  },
+  {
+    "number": "6012",
+    "dimensions": {
+      "d": 60,
+      "D": 95,
+      "B": 18
+    }
+  },
+  {
+    "number": "16012",
+    "dimensions": {
+      "d": 60,
+      "D": 95,
+      "B": 11
+    }
+  },
+  {
+    "number": "6912",
+    "dimensions": {
+      "d": 60,
+      "D": 85,
+      "B": 13
+    }
+  },
+  {
+    "number": "6812",
+    "dimensions": {
+      "d": 60,
+      "D": 78,
+      "B": 10
+    }
+  },
+  {
+    "number": "6411",
+    "dimensions": {
+      "d": 55,
+      "D": 140,
+      "B": 33
+    }
+  },
+  {
+    "number": "6311",
+    "dimensions": {
+      "d": 55,
+      "D": 120,
+      "B": 29
+    }
+  },
+  {
+    "number": "6211",
+    "dimensions": {
+      "d": 55,
+      "D": 100,
+      "B": 21
+    }
+  },
+  {
+    "number": "6011",
+    "dimensions": {
+      "d": 55,
+      "D": 90,
+      "B": 18
+    }
+  },
+  {
+    "number": "16011",
+    "dimensions": {
+      "d": 55,
+      "D": 90,
+      "B": 11
+    }
+  },
+  {
+    "number": "6911",
+    "dimensions": {
+      "d": 55,
+      "D": 80,
+      "B": 13
+    }
+  },
+  {
+    "number": "6811",
+    "dimensions": {
+      "d": 55,
+      "D": 72,
+      "B": 9
+    }
+  },
+  {
+    "number": "6410",
+    "dimensions": {
+      "d": 50,
+      "D": 130,
+      "B": 31
+    }
+  },
+  {
+    "number": "6310",
+    "dimensions": {
+      "d": 50,
+      "D": 110,
+      "B": 27
+    }
+  },
+  {
+    "number": "6210",
+    "dimensions": {
+      "d": 50,
+      "D": 90,
+      "B": 20
+    }
+  },
+  {
+    "number": "6010",
+    "dimensions": {
+      "d": 50,
+      "D": 80,
+      "B": 16
+    }
+  },
+  {
+    "number": "16010",
+    "dimensions": {
+      "d": 50,
+      "D": 80,
+      "B": 10
+    }
+  },
+  {
+    "number": "6910",
+    "dimensions": {
+      "d": 50,
+      "D": 72,
+      "B": 12
+    }
+  },
+  {
+    "number": "6810",
+    "dimensions": {
+      "d": 50,
+      "D": 65,
+      "B": 7
+    }
+  },
+  {
+    "number": "6409",
+    "dimensions": {
+      "d": 45,
+      "D": 120,
+      "B": 29
+    }
+  },
+  {
+    "number": "6309",
+    "dimensions": {
+      "d": 45,
+      "D": 100,
+      "B": 25
+    }
+  },
+  {
+    "number": "6209",
+    "dimensions": {
+      "d": 45,
+      "D": 85,
+      "B": 19
+    }
+  },
+  {
+    "number": "6009",
+    "dimensions": {
+      "d": 45,
+      "D": 75,
+      "B": 16
+    }
+  },
+  {
+    "number": "16009",
+    "dimensions": {
+      "d": 45,
+      "D": 75,
+      "B": 10
+    }
+  },
+  {
+    "number": "6909",
+    "dimensions": {
+      "d": 45,
+      "D": 68,
+      "B": 12
+    }
+  },
+  {
+    "number": "6809",
+    "dimensions": {
+      "d": 45,
+      "D": 58,
+      "B": 7
+    }
+  },
+  {
+    "number": "6408",
+    "dimensions": {
+      "d": 40,
+      "D": 110,
+      "B": 27
+    }
+  },
+  {
+    "number": "6308",
+    "dimensions": {
+      "d": 40,
+      "D": 90,
+      "B": 23
+    }
+  },
+  {
+    "number": "6208",
+    "dimensions": {
+      "d": 40,
+      "D": 80,
+      "B": 18
+    }
+  },
+  {
+    "number": "6008",
+    "dimensions": {
+      "d": 40,
+      "D": 68,
+      "B": 15
+    }
+  },
+  {
+    "number": "16008",
+    "dimensions": {
+      "d": 40,
+      "D": 68,
+      "B": 9
+    }
+  },
+  {
+    "number": "6908",
+    "dimensions": {
+      "d": 40,
+      "D": 62,
+      "B": 12
+    }
+  },
+  {
+    "number": "6808",
+    "dimensions": {
+      "d": 40,
+      "D": 52,
+      "B": 7
+    }
+  },
+  {
+    "number": "6407",
+    "dimensions": {
+      "d": 35,
+      "D": 100,
+      "B": 25
+    }
+  },
+  {
+    "number": "6307",
+    "dimensions": {
+      "d": 35,
+      "D": 80,
+      "B": 21
+    }
+  },
+  {
+    "number": "6207",
+    "dimensions": {
+      "d": 35,
+      "D": 72,
+      "B": 17
+    }
+  },
+  {
+    "number": "6007",
+    "dimensions": {
+      "d": 35,
+      "D": 62,
+      "B": 14
+    }
+  },
+  {
+    "number": "16007",
+    "dimensions": {
+      "d": 35,
+      "D": 62,
+      "B": 9
+    }
+  },
+  {
+    "number": "6907",
+    "dimensions": {
+      "d": 35,
+      "D": 55,
+      "B": 10
+    }
+  },
+  {
+    "number": "6807",
+    "dimensions": {
+      "d": 35,
+      "D": 47,
+      "B": 7
+    }
+  },
+  {
+    "number": "6406",
+    "dimensions": {
+      "d": 30,
+      "D": 90,
+      "B": 23
+    }
+  },
+  {
+    "number": "6306",
+    "dimensions": {
+      "d": 30,
+      "D": 72,
+      "B": 19
+    }
+  },
+  {
+    "number": "6206",
+    "dimensions": {
+      "d": 30,
+      "D": 62,
+      "B": 16
+    }
+  },
+  {
+    "number": "6006",
+    "dimensions": {
+      "d": 30,
+      "D": 55,
+      "B": 13
+    }
+  },
+  {
+    "number": "16006",
+    "dimensions": {
+      "d": 30,
+      "D": 55,
+      "B": 9
+    }
+  },
+  {
+    "number": "6906",
+    "dimensions": {
+      "d": 30,
+      "D": 47,
+      "B": 9
+    }
+  },
+  {
+    "number": "6806",
+    "dimensions": {
+      "d": 30,
+      "D": 42,
+      "B": 7
+    }
+  },
+  {
+    "number": "6405",
+    "dimensions": {
+      "d": 25,
+      "D": 80,
+      "B": 21
+    }
+  },
+  {
+    "number": "6305",
+    "dimensions": {
+      "d": 25,
+      "D": 62,
+      "B": 17
+    }
+  },
+  {
+    "number": "6205",
+    "dimensions": {
+      "d": 25,
+      "D": 52,
+      "B": 15
+    }
+  },
+  {
+    "number": "6005",
+    "dimensions": {
+      "d": 25,
+      "D": 47,
+      "B": 12
+    }
+  },
+  {
+    "number": "16005",
+    "dimensions": {
+      "d": 25,
+      "D": 47,
+      "B": 8
+    }
+  },
+  {
+    "number": "6905",
+    "dimensions": {
+      "d": 25,
+      "D": 42,
+      "B": 9
+    }
+  },
+  {
+    "number": "6805",
+    "dimensions": {
+      "d": 25,
+      "D": 37,
+      "B": 7
+    }
+  },
+  {
+    "number": "6404",
+    "dimensions": {
+      "d": 20,
+      "D": 72,
+      "B": 19
+    }
+  },
+  {
+    "number": "6304",
+    "dimensions": {
+      "d": 20,
+      "D": 52,
+      "B": 15
+    }
+  },
+  {
+    "number": "6204",
+    "dimensions": {
+      "d": 20,
+      "D": 47,
+      "B": 14
+    }
+  },
+  {
+    "number": "6004",
+    "dimensions": {
+      "d": 20,
+      "D": 42,
+      "B": 12
+    }
+  },
+  {
+    "number": "16004",
+    "dimensions": {
+      "d": 20,
+      "D": 42,
+      "B": 8
+    }
+  },
+  {
+    "number": "6904",
+    "dimensions": {
+      "d": 20,
+      "D": 37,
+      "B": 9
+    }
+  },
+  {
+    "number": "6804",
+    "dimensions": {
+      "d": 20,
+      "D": 32,
+      "B": 7
+    }
+  },
+  {
+    "number": "6403",
+    "dimensions": {
+      "d": 17,
+      "D": 62,
+      "B": 17
+    }
+  },
+  {
+    "number": "6303",
+    "dimensions": {
+      "d": 17,
+      "D": 47,
+      "B": 14
+    }
+  },
+  {
+    "number": "6203",
+    "dimensions": {
+      "d": 17,
+      "D": 40,
+      "B": 12
+    }
+  },
+  {
+    "number": "6003",
+    "dimensions": {
+      "d": 17,
+      "D": 35,
+      "B": 10
+    }
+  },
+  {
+    "number": "16003",
+    "dimensions": {
+      "d": 17,
+      "D": 35,
+      "B": 8
+    }
+  },
+  {
+    "number": "6903",
+    "dimensions": {
+      "d": 17,
+      "D": 30,
+      "B": 7
+    }
+  },
+  {
+    "number": "6803",
+    "dimensions": {
+      "d": 17,
+      "D": 26,
+      "B": 5
+    }
+  },
+  {
+    "number": "6302",
+    "dimensions": {
+      "d": 15,
+      "D": 42,
+      "B": 13
+    }
+  },
+  {
+    "number": "6202",
+    "dimensions": {
+      "d": 15,
+      "D": 35,
+      "B": 11
+    }
+  },
+  {
+    "number": "6002",
+    "dimensions": {
+      "d": 15,
+      "D": 32,
+      "B": 9
+    }
+  },
+  {
+    "number": "16002",
+    "dimensions": {
+      "d": 15,
+      "D": 32,
+      "B": 8
+    }
+  },
+  {
+    "number": "623",
+    "dimensions": {
+      "d": 3,
+      "D": 10,
+      "B": 4
+    }
+  },
+  {
+    "number": "60/2.5",
+    "dimensions": {
+      "d": 2.5,
+      "D": 8,
+      "B": 2.8
+    }
+  },
+  {
+    "number": "6902",
+    "dimensions": {
+      "d": 15,
+      "D": 28,
+      "B": 7
+    }
+  },
+  {
+    "number": "6802",
+    "dimensions": {
+      "d": 15,
+      "D": 24,
+      "B": 5
+    }
+  },
+  {
+    "number": "6301",
+    "dimensions": {
+      "d": 12,
+      "D": 37,
+      "B": 12
+    }
+  },
+  {
+    "number": "6201",
+    "dimensions": {
+      "d": 12,
+      "D": 32,
+      "B": 10
+    }
+  },
+  {
+    "number": "16101",
+    "dimensions": {
+      "d": 12,
+      "D": 30,
+      "B": 8
+    }
+  },
+  {
+    "number": "6001",
+    "dimensions": {
+      "d": 12,
+      "D": 28,
+      "B": 8
+    }
+  },
+  {
+    "number": "6901",
+    "dimensions": {
+      "d": 12,
+      "D": 24,
+      "B": 6
+    }
+  },
+  {
+    "number": "6801",
+    "dimensions": {
+      "d": 12,
+      "D": 21,
+      "B": 5
+    }
+  },
+  {
+    "number": "6300",
+    "dimensions": {
+      "d": 10,
+      "D": 35,
+      "B": 11
+    }
+  },
+  {
+    "number": "6200",
+    "dimensions": {
+      "d": 10,
+      "D": 30,
+      "B": 9
+    }
+  },
+  {
+    "number": "16100",
+    "dimensions": {
+      "d": 10,
+      "D": 28,
+      "B": 8
+    }
+  },
+  {
+    "number": "6000",
+    "dimensions": {
+      "d": 10,
+      "D": 26,
+      "B": 8
+    }
+  },
+  {
+    "number": "6900",
+    "dimensions": {
+      "d": 10,
+      "D": 22,
+      "B": 6
+    }
+  },
+  {
+    "number": "6800",
+    "dimensions": {
+      "d": 10,
+      "D": 19,
+      "B": 5
+    }
+  },
+  {
+    "number": "629",
+    "dimensions": {
+      "d": 9,
+      "D": 26,
+      "B": 8
+    }
+  },
+  {
+    "number": "609",
+    "dimensions": {
+      "d": 9,
+      "D": 24,
+      "B": 7
+    }
+  },
+  {
+    "number": "618/9",
+    "dimensions": {
+      "d": 9,
+      "D": 17,
+      "B": 4
+    }
+  },
+  {
+    "number": "608",
+    "dimensions": {
+      "d": 8,
+      "D": 22,
+      "B": 7
+    }
+  },
+  {
+    "number": "618/8",
+    "dimensions": {
+      "d": 8,
+      "D": 16,
+      "B": 4
+    }
+  },
+  {
+    "number": "627",
+    "dimensions": {
+      "d": 7,
+      "D": 22,
+      "B": 7
+    }
+  },
+  {
+    "number": "607",
+    "dimensions": {
+      "d": 7,
+      "D": 19,
+      "B": 6
+    }
+  },
+  {
+    "number": "618/7",
+    "dimensions": {
+      "d": 7,
+      "D": 14,
+      "B": 3.5
+    }
+  },
+  {
+    "number": "626",
+    "dimensions": {
+      "d": 6,
+      "D": 19,
+      "B": 6
+    }
+  },
+  {
+    "number": "618/6",
+    "dimensions": {
+      "d": 6,
+      "D": 13,
+      "B": 3.5
+    }
+  },
+  {
+    "number": "635",
+    "dimensions": {
+      "d": 5,
+      "D": 19,
+      "B": 6
+    }
+  },
+  {
+    "number": "625",
+    "dimensions": {
+      "d": 5,
+      "D": 16,
+      "B": 5
+    }
+  },
+  {
+    "number": "618/5",
+    "dimensions": {
+      "d": 5,
+      "D": 11,
+      "B": 3
+    }
+  },
+  {
+    "number": "634",
+    "dimensions": {
+      "d": 4,
+      "D": 16,
+      "B": 5
+    }
+  },
+  {
+    "number": "624",
+    "dimensions": {
+      "d": 4,
+      "D": 13,
+      "B": 5
+    }
+  },
+  {
+    "number": "604",
+    "dimensions": {
+      "d": 4,
+      "D": 12,
+      "B": 4
+    }
+  }
+];
+        
+        // ============================================================
+        // ============== پایان محل قرارگیری داده‌ها ==================
+        // ============================================================
+
+        // داده‌های فعال بر اساس حالت انتخاب شده
+        let currentBearings = inchBearings;
+        let currentMode = 'inch';
+        let searchTimeout;
+
+        // دریافت عناصر صفحه
+        const searchBtn = document.getElementById('searchBtn');
+        const resultsList = document.getElementById('resultsList');
+        const resultCount = document.getElementById('resultCount');
+        const modeInfo = document.getElementById('modeInfo');
+        const dataCount = document.getElementById('dataCount');
+        const modeHint = document.getElementById('modeHint');
+
+        // نمایش اطلاعات اولیه
+        function updateDataInfo() {
+            const count = currentBearings.length;
+            const modeName = currentMode === 'inch' ? 'اینچی' : 'شیار عمیق';
+            modeInfo.innerHTML = `📊 حالت جاری: بلبرینگ‌های ${modeName}`;
+            dataCount.innerHTML = `${count.toLocaleString('fa-IR')} بلبرینگ`;
+        }
+
+        // تغییر حالت
+        function switchMode(mode) {
+            currentMode = mode;
+            
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            if (mode === 'inch') {
+                document.querySelector('.inch-mode').classList.add('active');
+                currentBearings = inchBearings;
+                modeHint.innerHTML = '<span>📏</span><span>در حالت اینچی می‌توانید برای هر بعد محدوده (حداقل و حداکثر) وارد کنید</span>';
+                
+                // نمایش هر دو فیلد برای هر بعد
+                document.getElementById('dSeparator').style.display = 'inline';
+                document.getElementById('DSeparator').style.display = 'inline';
+                document.getElementById('BSeparator').style.display = 'inline';
+                document.getElementById('max_d').style.display = 'block';
+                document.getElementById('max_D').style.display = 'block';
+                document.getElementById('max_B').style.display = 'block';
+                
+                // تغییر placeholderها
+                document.getElementById('min_d').placeholder = 'حداقل';
+                document.getElementById('min_D').placeholder = 'حداقل';
+                document.getElementById('min_B').placeholder = 'حداقل';
+            } else {
+                document.querySelector('.metric-mode').classList.add('active');
+                currentBearings = metricBearings;
+                modeHint.innerHTML = '<span>⚙️</span><span>در حالت متریک مقادیر دقیق وارد کنید (حداکثر را خالی بگذارید)</span>';
+                
+                // پنهان کردن فیلد دوم برای هر بعد
+                document.getElementById('dSeparator').style.display = 'none';
+                document.getElementById('DSeparator').style.display = 'none';
+                document.getElementById('BSeparator').style.display = 'none';
+                document.getElementById('max_d').style.display = 'none';
+                document.getElementById('max_D').style.display = 'none';
+                document.getElementById('max_B').style.display = 'none';
+                
+                // تغییر placeholderها
+                document.getElementById('min_d').placeholder = 'مقدار دقیق';
+                document.getElementById('min_D').placeholder = 'مقدار دقیق';
+                document.getElementById('min_B').placeholder = 'مقدار دقیق';
+            }
+            
+            updateDataInfo();
+            clearSearchFields();
+            showResults(currentBearings);
+        }
+
+        // پاک کردن فیلدهای جستجو
+        function clearSearchFields() {
+            document.getElementById('bearingNumber').value = '';
+            document.getElementById('min_d').value = '';
+            document.getElementById('max_d').value = '';
+            document.getElementById('min_D').value = '';
+            document.getElementById('max_D').value = '';
+            document.getElementById('min_B').value = '';
+            document.getElementById('max_B').value = '';
+        }
+
+        // جستجو با تاخیر
+        function liveSearch() {
+            if (searchTimeout) {
+                clearTimeout(searchTimeout);
+            }
+            searchTimeout = setTimeout(() => {
+                performSearch();
+            }, 300);
+        }
+
+        // جستجوی اصلی
+        function performSearch() {
+            const searchNumber = document.getElementById('bearingNumber').value.trim().toLowerCase();
+            
+            let results = currentBearings;
+
+            // فیلتر بر اساس شماره
+            if (searchNumber) {
+                results = results.filter(b => 
+                    b.number.toString().toLowerCase().includes(searchNumber)
+                );
+            }
+
+            if (currentMode === 'inch') {
+                // حالت اینچی: جستجو با محدوده
+                const min_d = document.getElementById('min_d').value ? parseFloat(document.getElementById('min_d').value) : -Infinity;
+                const max_d = document.getElementById('max_d').value ? parseFloat(document.getElementById('max_d').value) : Infinity;
+                const min_D = document.getElementById('min_D').value ? parseFloat(document.getElementById('min_D').value) : -Infinity;
+                const max_D = document.getElementById('max_D').value ? parseFloat(document.getElementById('max_D').value) : Infinity;
+                const min_B = document.getElementById('min_B').value ? parseFloat(document.getElementById('min_B').value) : -Infinity;
+                const max_B = document.getElementById('max_B').value ? parseFloat(document.getElementById('max_B').value) : Infinity;
+
+                // بررسی معتبر بودن محدوده‌ها
+                if ((min_d !== -Infinity && max_d !== Infinity && min_d > max_d) ||
+                    (min_D !== -Infinity && max_D !== Infinity && min_D > max_D) ||
+                    (min_B !== -Infinity && max_B !== Infinity && min_B > max_B)) {
+                    alert('مقدار حداقل نمی‌تواند از حداکثر بیشتر باشد');
+                    return;
+                }
+
+                results = results.filter(b => {
+                    return b.dimensions.d >= min_d && b.dimensions.d <= max_d &&
+                           b.dimensions.D >= min_D && b.dimensions.D <= max_D &&
+                           b.dimensions.B >= min_B && b.dimensions.B <= max_B;
+                });
+            } else {
+                // حالت متریک: جستجوی دقیق
+                const d = document.getElementById('min_d').value ? parseFloat(document.getElementById('min_d').value) : null;
+                const D = document.getElementById('min_D').value ? parseFloat(document.getElementById('min_D').value) : null;
+                const B = document.getElementById('min_B').value ? parseFloat(document.getElementById('min_B').value) : null;
+
+                results = results.filter(b => {
+                    let match = true;
+                    
+                    if (d !== null) {
+                        match = match && Math.abs(b.dimensions.d - d) < 0.001; // تساوی با تلرانس بسیار کم
+                    }
+                    if (D !== null) {
+                        match = match && Math.abs(b.dimensions.D - D) < 0.001;
+                    }
+                    if (B !== null) {
+                        match = match && Math.abs(b.dimensions.B - B) < 0.001;
+                    }
+                    
+                    return match;
+                });
+            }
+
+            showResults(results);
+        }
+
+        // نمایش نتایج
+        function showResults(results) {
+            resultCount.textContent = results.length.toLocaleString('fa-IR');
+
+            if (results.length === 0) {
+                resultsList.innerHTML = `
+                    <div class="empty-state">
+                        <span>🔍</span>
+                        <div>هیچ بلبرینگی با این مشخصات یافت نشد</div>
+                    </div>
+                `;
+                return;
+            }
+
+            const searchNumber = document.getElementById('bearingNumber').value.trim().toLowerCase();
+            
+            let html = '';
+
+            const displayResults = results.slice(0, 500);
+            
+            displayResults.forEach(b => {
+                const numberMatch = searchNumber && b.number.toString().toLowerCase().includes(searchNumber);
+                
+                html += `
+                    <div class="result-row ${numberMatch ? 'matched' : ''}">
+                        <span class="result-number">${b.number}</span>
+                        <span class="dimension-value">${b.dimensions.d.toFixed(3)}</span>
+                        <span class="dimension-value">${b.dimensions.D.toFixed(3)}</span>
+                        <span class="dimension-value">${b.dimensions.B.toFixed(3)}</span>
+                    </div>
+                `;
+            });
+
+            if (results.length > 500) {
+                html += `
+                    <div style="padding: 16px; text-align: center; background: #f8fafc; color: #64748b; font-size: 14px;">
+                        <span>📌 نمایش ۵۰۰ نتیجه از ${results.length.toLocaleString('fa-IR')} نتیجه</span>
+                    </div>
+                `;
+            }
+
+            resultsList.innerHTML = html;
+        }
+
+        // رویدادها
+        searchBtn.addEventListener('click', performSearch);
+
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('input', liveSearch);
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+        });
+
+        // نمایش اولیه
+        window.addEventListener('load', () => {
+            updateDataInfo();
+            showResults(currentBearings);
+            
+            // تنظیم اولیه برای حالت اینچی
+            document.getElementById('dSeparator').style.display = 'inline';
+            document.getElementById('DSeparator').style.display = 'inline';
+            document.getElementById('BSeparator').style.display = 'inline';
+            document.getElementById('max_d').style.display = 'block';
+            document.getElementById('max_D').style.display = 'block';
+            document.getElementById('max_B').style.display = 'block';
+        });
+    </script>
+</body>
+</html>
